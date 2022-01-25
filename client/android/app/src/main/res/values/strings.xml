@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">android</string>
+    <string name="title_activity_main">android</string>
+    <string name="package_name">com.mirsella.powercontrol</string>
+    <string name="custom_url_scheme">com.mirsella.powercontrol</string>
+</resources>

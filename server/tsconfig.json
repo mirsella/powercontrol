@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "target": "esnext",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "rootDir": "./",
+    "outDir": "./build",
+    "strict": true
+  },
+  "files": [
+    "index.ts",
+    "routes.ts",
+    "config.ts",
+    "relay.ts",
+    "grub.ts"
+  ]
+}

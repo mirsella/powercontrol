@@ -1,0 +1,46 @@
+const config = require('./config')
+import * as relay from './relay'
+import { Application } from 'express'
+
+module.exports = (app: Application) => {
+
+  app.all('/', (req, res) => {
+    res.send("powercontrol")
+  })
+
+  app.all('/getnextboot', (req, res) => {
+    res.json(config.getnextboot())
+  })
+
+  app.all('/setnextboot', (req, res) => {
+    if (config.setnextboot(req.body)) {
+      res.send(req.body)
+    } else {
+      res.status(400)
+      res.send("invalid config")
+    }
+  })
+
+  app.all('/getpins', (req, res) => {
+    res.json(config.getpins())
+  })
+
+  app.all('/setpins', (req, res) => {
+    if (config.setpins(req.body)) {
+      res.send(req.body)
+    } else {
+      res.status(400)
+      res.send("invalid config")
+    }
+  })
+
+  app.all('/power', (req, res) => {
+    relay.presspower()
+      res.send("power")
+  })
+
+  app.all('/reset', (req, res) => {
+    relay.pressreset()
+      res.send("reset")
+  })
+}
