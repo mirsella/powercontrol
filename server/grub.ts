@@ -1,7 +1,8 @@
+const config = require('./config')
+import * as fs from 'fs-extra';
+
 let SerialPort = require('serialport');
 let port = new SerialPort('/dev/ttyS0', { baudRate: 9600 });
-
-const config = require('./config')
 
 const keypresses: Record<string, any> = {
   "ESC": [0x1b],
@@ -9,6 +10,9 @@ const keypresses: Record<string, any> = {
   "DOWN": [0x1b, 0x5b, 0x42],
   "ENTER": "\n"
 }
+
+const pattern = fs.readJsonSync('./bootpattern.json')
+let currentpattern: Date[] = []
 
 let lastDataDate = new Date()
 let lastWatchDate = new Date(0,0,0,0,0,0,0)
@@ -18,6 +22,19 @@ port.on('error', (error: any) => console.log('Serial port error: ' + error));
 port.on('open', () => console.log('port open. Data rate: ' + port.baudRate));
 port.on('data', (data: any) => {
   lastDataDate = new Date()
+
+  if (new Date().getTime() - lastWatchDate.getTime() > 30000) {
+    pattern.push(currentpattern)
+    currentpattern = []
+    fs.writeFile('./bootpattern.json', pattern, (err: any) => {
+      if (err) { console.log(err) }
+      else { console.log('wrote pattern') }
+    })
+    currentpattern.push(lastDataDate)
+  } else {
+    currentpattern.push(lastDataDate)
+  }
+
   console.log('receiving data')
   watching = true
 })
