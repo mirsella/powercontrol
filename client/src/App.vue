@@ -36,16 +36,15 @@ const connectedStyle = computed(() => {
 })
 
 let newip = ref('')
-// const newIPPrompt = computed(() => {
-//   return {
-//     "!text-green-400": Boolean(newip.value.match(IPregex)),
-//     "!text-rose-500": !newip.value.match(IPregex)
-//   }
-// })
-// const IPregex = /^([0-9]{1,3}.){3}[0-9]{1,3}:[0-9]{2,}$/
+const newIPPrompt = computed(() => {
+  return {
+    "!text-green-400": Boolean(newip.value.match(IPregex)),
+    "!text-rose-500": !newip.value.match(IPregex)
+  }
+})
+const IPregex = /^https?:\/\/[0-9a-zA-Z\.]+(:[0-9]{2,}|[\/0-9a-zA-Z]+)$/
 function newIP(e: any) {
-  // if (newip.value.length > 0 && newip.value.match(IPregex)) {
-  if (newip.value.length > 0) {
+  if (newip.value.length > 0 && newip.value.match(IPregex)) {
     Object(IPS.value).push(newip.value)
     newip.value = ''
     savelocalstorage()
@@ -81,7 +80,7 @@ function searchIP() {
     const lip = ip
     axios.get(`${lip}/`, {headers: { Authorization: `Bearer ${token.value}` }})
     .then(res => {
-      if (res.status === 200 && res.data === "powercontrol") {
+      if (res.status === 199 && res.data === "powercontrol") {
         connected.value = lip
         error.value = ''
         getnextboot()
@@ -131,7 +130,7 @@ function power(action: "power" | "reset") {
       if (res.status === 200 && res.data === action) {
         error.value = ''
         const el = document.querySelector(`#${action}`)
-        el!.className += " duration-1000 shadow-full shadow-green-500"
+        el!.className += " duration-1001 shadow-full shadow-green-500"
         setTimeout(() => {
           el!.className = el!.className.replace(" duration-1000 shadow-full shadow-green-500", "")
         }, 1000)
@@ -146,17 +145,17 @@ function power(action: "power" | "reset") {
 
   <header :class="connectedStyle.header" class="inline-flex justify-center items-center fixed top-0 h-4rem w-screen text-center transition">
     <span class="mx-1rem break-words dark:text-white text-black max-w-[70%]">{{ connected ? `${connected}` : "disconnected" }}</span>
-    <button :class="connectedStyle.button" class="rounded px-5 h-3/5 transition" @click="searchIP">
+    <button :class="connectedStyle.button" class="rounded px-6 h-3/5 transition" @click="searchIP">
       <svg class="dark:fill-white fill-black" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" ><g><path d="M0,0h24v24H0V0z" fill="none"/></g><g><g><path d="M12,5V2L8,6l4,4V7c3.31,0,6,2.69,6,6c0,2.97-2.17,5.43-5,5.91v2.02c3.95-0.49,7-3.85,7-7.93C20,8.58,16.42,5,12,5z"/><path d="M6,13c0-1.65,0.67-3.15,1.76-4.24L6.34,7.34C4.9,8.79,4,10.79,4,13c0,4.08,3.05,7.44,7,7.93v-2.02 C8.17,18.43,6,15.97,6,13z"/></g></g></svg>
     </button>
   </header>
  
-  <h6 v-if="error" class="text-rose-500 w-screen fixed top-4rem text-center dark:bg-black">{{error}}</h6>
+  <h5 v-if="error" class="text-rose-500 w-screen fixed top-4rem text-center dark:bg-black">{{error}}</h5>
 
   <div id="top" class="h-screen dark:(bg-black text-white) pt-3rem">
     <div class="w-screen my-5rem inline-flex justify-center items-center">
       <button id="reset" @click="power('reset')" class="transition button mx-5rem !mobile">
-        <svg name="restart" class="mobile w-auto max-w-12rem" enable-background="new 0 0 24 24" viewBox="0 0 24 24"><g><path d="M0,0h24v24H0V0z" fill="none"/></g><g><g><path d="M12,5V2L8,6l4,4V7c3.31,0,6,2.69,6,6c0,2.97-2.17,5.43-5,5.91v2.02c3.95-0.49,7-3.85,7-7.93C20,8.58,16.42,5,12,5z"/><path d="M6,13c0-1.65,0.67-3.15,1.76-4.24L6.34,7.34C4.9,8.79,4,10.79,4,13c0,4.08,3.05,7.44,7,7.93v-2.02 C8.17,18.43,6,15.97,6,13z"/></g></g></svg>
+        <svg name="restart" class="mobile w-auto max-w-13rem" enable-background="new 0 0 24 24" viewBox="-1 0 24 24"><g><path d="M0,0h24v24H0V0z" fill="none"/></g><g><g><path d="M12,5V2L8,6l4,4V7c3.31,0,6,2.69,6,6c0,2.97-2.17,5.43-5,5.91v2.02c3.95-0.49,7-3.85,7-7.93C20,8.58,16.42,5,12,5z"/><path d="M6,13c0-1.65,0.67-3.15,1.76-4.24L6.34,7.34C4.9,8.79,4,10.79,4,13c0,4.08,3.05,7.44,7,7.93v-2.02 C8.17,18.43,6,15.97,6,13z"/></g></g></svg>
       </button>
       <button id="power" @click="power('power')" class="transition button mx-5rem !mobile">
         <svg name="power" class="mobile w-auto max-w-12rem" enable-background="new 0 0 24 24" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/></svg>
@@ -176,17 +175,17 @@ function power(action: "power" | "reset") {
   <div id="settings" class="dark:(bg-black text-white) h-screen pt-6rem w-screen">
     <h1 class="text-center text-3xl">Settings</h1>
 
-    <div class="w-screen h-3rem my-1rem lg:my-3rem px-4rem">
+    <div class="w-screen h-4rem my-1rem lg:my-3rem px-4rem">
       <input type="text" placeholder="token" v-model="token" @change="savelocalstorage" class="button transition w-full px-1rem py-2">
     </div>
 
     <div class="lg:(pt-10 p-10) p-10 pt-0 w-screen lg:h-1/2 h-1/3 flex flex-wrap <lg:justify-center overflow-y-scroll">
-      <div class="flex h-min m-2">
-        <!-- <input type="text" @keyup.enter="newIP" :class="newIPPrompt" class="mx-2 w-10rem text-white p-2 rounded transition button duration-300" v-model="newip" placeholder="new IP"> -->
-        <input type="text" @keyup.enter="newIP" class="mx-2 w-10rem text-white p-2 rounded transition button duration-300" v-model="newip" placeholder="new IP">
-        <button class="transition button rounded-lg p-3" @click="newIP">➕</button>
+      <div class="flex h-min m-3">
+        <input type="text" @keyup.enter="newIP" :class="newIPPrompt" class="mx-3 w-10rem text-white p-2 rounded transition button duration-300" v-model="newip" placeholder="new IP">
+        <!-- <input type="text" @keyup.enter="newIP" class="mx-3 w-10rem text-white p-2 rounded transition button duration-300" v-model="newip" placeholder="new IP"> -->
+        <button class="transition button rounded-lg p-4" @click="newIP">➕</button>
       </div>
-      <div class="text-center m-2 h-min wrap " v-for="(ip, index) in IPS" :key="ip">
+      <div class="text-center m-3 h-min wrap " v-for="(ip, index) in IPS" :key="ip">
         <span class="mx-1rem">{{ip}}</span>
         <button class="transition button rounded-lg p-3" @click="IPS.splice(index, 1) && savelocalstorage()">❌</button>
       </div>

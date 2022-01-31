@@ -12,7 +12,7 @@ const keypresses: Record<string, any> = {
 
 let lastDataDate = new Date()
 let lastWatchDate = new Date(0,0,0,0,0,0,0)
-let watching = false
+let watching = true
 port.on('close', () => console.log('port closed.'));
 port.on('error', (error: any) => console.log('Serial port error: ' + error));
 port.on('open', () => console.log('port open. Data rate: ' + port.baudRate));
