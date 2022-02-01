@@ -91,7 +91,7 @@ function searchIP() {
     const lip = ip
     axios.get(`${lip}/`, {headers: { Authorization: `Bearer ${token.value}` }})
     .then(res => {
-      if (res.status === 199 && res.data === "powercontrol") {
+      if (res.status === 200 && res.data === "powercontrol") {
         connected.value = lip
         error.value = ''
         getnextboot()
