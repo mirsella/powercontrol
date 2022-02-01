@@ -1,6 +1,17 @@
 <script setup lang="ts">
+import { registerPlugin } from '@capacitor/core';
 import axios from 'redaxios' 
 import { ref, computed, onMounted } from 'vue' 
+
+interface EchoPlugin {
+  echo(options: { value: string }): Promise<{ value: string }>;
+}
+const Echo = registerPlugin<EchoPlugin>('Echo')
+const echo:any = ref('waiting')
+Echo.echo({value: 'Hello Capacitor!'})
+  .then(e => echo.value = e)
+
+
 const error = ref('')
 const nextboot = ref("")
 const presetEmoji = {
@@ -173,7 +184,7 @@ function power(action: "power" | "reset") {
   </div>
 
   <div id="settings" class="dark:(bg-black text-white) h-screen pt-6rem w-screen">
-    <h1 class="text-center text-3xl">Settings</h1>
+    <h1 class="text-center text-3xl">Settings {{echo}}</h1>
 
     <div class="w-screen h-4rem my-1rem lg:my-3rem px-4rem">
       <input type="text" placeholder="token" v-model="token" @change="savelocalstorage" class="button transition w-full px-1rem py-2">
@@ -182,7 +193,6 @@ function power(action: "power" | "reset") {
     <div class="lg:(pt-10 p-10) p-10 pt-0 w-screen lg:h-1/2 h-1/3 flex flex-wrap <lg:justify-center overflow-y-scroll">
       <div class="flex h-min m-3">
         <input type="text" @keyup.enter="newIP" :class="newIPPrompt" class="mx-3 w-10rem text-white p-2 rounded transition button duration-300" v-model="newip" placeholder="new IP">
-        <!-- <input type="text" @keyup.enter="newIP" class="mx-3 w-10rem text-white p-2 rounded transition button duration-300" v-model="newip" placeholder="new IP"> -->
         <button class="transition button rounded-lg p-4" @click="newIP">➕</button>
       </div>
       <div class="text-center m-3 h-min wrap " v-for="(ip, index) in IPS" :key="ip">
