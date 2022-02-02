@@ -21,8 +21,9 @@ port.on('data', (data: any) => {
   if ((new Date().getTime() - lastWatchDate.getTime()) > 10000) {
     watching = true
     console.log('receiving data watching')
+  } else {
+    console.log('receiving data ignoring')
   }
-  console.log('receiving data ignoring')
 })
 
 setInterval(() => {
@@ -38,6 +39,6 @@ setInterval(() => {
       console.log(new Date().getTime() - lastDataDate.getTime(), 'without data')
     }
   } else {
-  watching = false
+    watching = false
   }
 }, 500)
