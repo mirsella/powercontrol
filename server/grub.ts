@@ -1,5 +1,4 @@
 const config = require('./config')
-import * as fs from 'fs-extra';
 
 let SerialPort = require('serialport');
 let port = new SerialPort('/dev/ttyS0', { baudRate: 9600 });
