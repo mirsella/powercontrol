@@ -26,10 +26,7 @@ port.on('data', (data: any) => {
   if (new Date().getTime() - lastWatchDate.getTime() > 30000) {
     pattern.push(currentpattern)
     currentpattern = []
-    fs.writeFile('./bootpattern.json', pattern, (err: any) => {
-      if (err) { console.log(err) }
-      else { console.log('wrote pattern') }
-    })
+    fs.writeJson('./bootpattern.json', pattern)
     currentpattern.push(lastDataDate)
   } else {
     currentpattern.push(lastDataDate)
