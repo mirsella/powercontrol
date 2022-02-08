@@ -1,6 +1,6 @@
 {
 	"appId": "com.mirsella.powercontrol",
-	"appName": "android",
+	"appName": "powercontrol",
 	"webDir": "dist",
 	"bundledWebRuntime": false
 }

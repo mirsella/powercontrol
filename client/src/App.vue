@@ -1,6 +1,17 @@
 <script setup lang="ts">
 import axios from 'redaxios' 
 import { ref, computed, onMounted } from 'vue' 
+import { Wifi } from '@capacitor-community/wifi';
+
+let nativeIPs = <string[]>[]
+Wifi.getIP()
+  .then((e: object) => {
+    const ips = Object.values(e)
+    nativeIPs = ips.map((ip: string) => {
+      return ip.split('.')[2]
+    })
+  })
+
 const error = ref('')
 const nextboot = ref("")
 const presetEmoji = {
@@ -53,7 +64,7 @@ function newIP(e: any) {
 }
 
 const token = ref(window.localStorage.getItem("token") || "")
-let IPS = ref(JSON.parse(window.localStorage.getItem("IPS") || "[]"))
+let IPS = ref<string[]>(JSON.parse(window.localStorage.getItem("IPS") || "[]"))
 let preset = JSON.parse(window.localStorage.getItem("preset") || '{"windows": [], "linux": []}')
 
 if (Object.keys(preset).length !== 2 && typeof preset.windows !== "object" && typeof preset.linux !== "object") {
@@ -74,13 +85,24 @@ function savelocalstorage () {
   window.localStorage.setItem("preset", JSON.stringify(preset.value))
 }
 
+const ipsv = ref<string[]>([])
 onMounted(() => searchIP())
 function searchIP() {
-  IPS.value.forEach((ip: string) => {
+  const ips = Array.from(IPS.value)
+  for (const [index, ip] of ips.entries()) {
+    if (ip.match(/\.XXX\./)) {
+      ips.splice(index, 1)
+      nativeIPs.forEach((nativeIP: string) => {
+          ips.push(ip.replace(/\.XXX\./, `.${nativeIP}.`))
+      })
+    }
+  }
+  ipsv.value = ips
+  ips.forEach((ip: string) => {
     const lip = ip
     axios.get(`${lip}/`, {headers: { Authorization: `Bearer ${token.value}` }})
     .then(res => {
-      if (res.status === 199 && res.data === "powercontrol") {
+      if (res.status === 200 && res.data === "powercontrol") {
         connected.value = lip
         error.value = ''
         getnextboot()
@@ -174,15 +196,15 @@ function power(action: "power" | "reset") {
 
   <div id="settings" class="dark:(bg-black text-white) h-screen pt-6rem w-screen">
     <h1 class="text-center text-3xl">Settings</h1>
+    <h6 class="overflow-scroll">{{ipsv}}</h6>
 
-    <div class="w-screen h-4rem my-1rem lg:my-3rem px-4rem">
+    <div class="w-screen h-4rem my-1rem px-4rem">
       <input type="text" placeholder="token" v-model="token" @change="savelocalstorage" class="button transition w-full px-1rem py-2">
     </div>
 
     <div class="lg:(pt-10 p-10) p-10 pt-0 w-screen lg:h-1/2 h-1/3 flex flex-wrap <lg:justify-center overflow-y-scroll">
       <div class="flex h-min m-3">
         <input type="text" @keyup.enter="newIP" :class="newIPPrompt" class="mx-3 w-10rem text-white p-2 rounded transition button duration-300" v-model="newip" placeholder="new IP">
-        <!-- <input type="text" @keyup.enter="newIP" class="mx-3 w-10rem text-white p-2 rounded transition button duration-300" v-model="newip" placeholder="new IP"> -->
         <button class="transition button rounded-lg p-4" @click="newIP">➕</button>
       </div>
       <div class="text-center m-3 h-min wrap " v-for="(ip, index) in IPS" :key="ip">

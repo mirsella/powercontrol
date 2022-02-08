@@ -1,5 +1,9 @@
 [
 	{
+		"pkg": "@capacitor-community/wifi",
+		"classpath": "com.digaus.capacitor.wifi.Wifi"
+	},
+	{
 		"pkg": "@robingenz/capacitor-android-dark-mode-support",
 		"classpath": "dev.robingenz.capacitor.androiddarkmodesupport.AndroidDarkModeSupportPlugin"
 	}
