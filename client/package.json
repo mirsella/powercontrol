@@ -10,7 +10,7 @@
     "resources": "cordova-res android --skip-config --copy"
   },
   "dependencies": {
-    "@capacitor-community/wifi": "file:../../../Downloads/capacitor3-wifimanager",
+    "@capacitor-community/wifi": "github:mirsella/capacitor3-wifimanager",
     "@capacitor/android": "^3.4.0",
     "@capacitor/core": "^3.4.0",
     "@robingenz/capacitor-android-dark-mode-support": "^1.0.0",

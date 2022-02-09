@@ -4,12 +4,13 @@ import { ref, computed, onMounted } from 'vue'
 import { Wifi } from '@capacitor-community/wifi';
 
 let nativeIPs = <string[]>[]
-Wifi.getIP()
+Wifi.getAllIP()
   .then((e: object) => {
     const ips = Object.values(e)
     nativeIPs = ips.map((ip: string) => {
       return ip.split('.')[2]
     })
+    searchIP()
   })
 
 const error = ref('')
@@ -85,7 +86,6 @@ function savelocalstorage () {
   window.localStorage.setItem("preset", JSON.stringify(preset.value))
 }
 
-const ipsv = ref<string[]>([])
 onMounted(() => searchIP())
 function searchIP() {
   const ips = Array.from(IPS.value)
@@ -97,7 +97,6 @@ function searchIP() {
       })
     }
   }
-  ipsv.value = ips
   ips.forEach((ip: string) => {
     const lip = ip
     axios.get(`${lip}/`, {headers: { Authorization: `Bearer ${token.value}` }})
@@ -196,7 +195,6 @@ function power(action: "power" | "reset") {
 
   <div id="settings" class="dark:(bg-black text-white) h-screen pt-6rem w-screen">
     <h1 class="text-center text-3xl">Settings</h1>
-    <h6 class="overflow-scroll">{{ipsv}}</h6>
 
     <div class="w-screen h-4rem my-1rem px-4rem">
       <input type="text" placeholder="token" v-model="token" @change="savelocalstorage" class="button transition w-full px-1rem py-2">
