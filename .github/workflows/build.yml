@@ -1,0 +1,24 @@
+name: build
+
+on: push
+
+jobs:
+  buildserver:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: build
+        run: |
+          cd server
+          npm install
+          npm run build
+
+  buildclient:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: build
+        run: |
+          cd client
+          npm install
+          npm run build
