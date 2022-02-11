@@ -1,0 +1,62 @@
+name: Build Android
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v2
+
+      - name: Setup java
+        uses: actions/setup-java@v1
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+
+      - name: Install app dependencies
+        working-directory: ./client
+        run: npm install
+
+      - name: Build app
+        working-directory: ./client
+        run: npm run build
+
+      - name: Capacitor update
+        working-directory: ./client
+        run: npx cap update
+
+      - name: Capacitor copy
+        working-directory: ./client
+        run: npx cap copy
+
+      - name: Build app bundle
+        working-directory: ./client
+        run: cd android && gradle bundle
+
+      - name: Extract Android signing key from env
+        working-directory: ./client
+        run: |
+          echo "${{ secrets.RELEASE_KEYSTORE }}" > android/release.jks.base64
+          base64 -d android/release.jks.base64 > android/release.decrypted.jks
+
+      - name: Sign dev build
+        working-directory: ./client
+        run: jarsigner -keystore android/release.decrypted.jks -storepass "${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" -signedjar ./android/app/build/outputs/bundle/release/app-release-signed.aab ./android/app/build/outputs/bundle/release/app-release.aab release
+
+      - name: Upload release bundle
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-release
+          path: client/android/app/build/outputs/bundle/release/app-release-signed.aab
+          retention-days: 60

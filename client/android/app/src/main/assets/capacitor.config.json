@@ -1,0 +1,6 @@
+{
+	"appId": "com.mirsella.powercontrol",
+	"appName": "powercontrol",
+	"webDir": "dist",
+	"bundledWebRuntime": false
+}
