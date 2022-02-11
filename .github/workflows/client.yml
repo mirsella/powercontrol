@@ -25,28 +25,33 @@ jobs:
           node-version: 16.x
 
       - name: Install app dependencies
-        run: |
-          cd client
-          npm install
+        working-directory: ./client
+        run: npm install
 
       - name: Build app
+        working-directory: ./client
         run: npm run build
 
       - name: Capacitor update
+        working-directory: ./client
         run: npx cap update
 
       - name: Capacitor copy
+        working-directory: ./client
         run: npx cap copy
 
       - name: Build app bundle
+        working-directory: ./client
         run: cd android && gradle bundle
 
       - name: Extract Android signing key from env
+        working-directory: ./client
         run: |
           echo "${{ secrets.RELEASE_KEYSTORE }}" > android/release.jks.base64
           base64 -d android/release.jks.base64 > android/release.decrypted.jks
 
       - name: Sign dev build
+        working-directory: ./client
         run: jarsigner -keystore android/release.decrypted.jks -storepass "${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" -signedjar ./android/app/build/outputs/bundle/release/app-release-signed.aab ./android/app/build/outputs/bundle/release/app-release.aab release
 
       - name: Upload release bundle
