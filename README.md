@@ -4,3 +4,14 @@ so i can turn on, off, reset and choose to boot on windows or linux from a web a
 todo : reformat and add screenshots + pictures of the setup
 
 feel free to ask anything it was a fun project not very well documented
+
+
+# pictures
+<p float="left">
+  <img src="./pictures/client-web1.png" width=40%>
+  <img src="./pictures/client-web2.png" width=40%>
+</p>
+<p float="left">
+  <img src="./pictures/client-android1.png" width=20%>
+  <img src="./pictures/client-android2.png" width=20%>
+</p>
