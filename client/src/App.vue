@@ -214,7 +214,7 @@ function power(action: "power" | "reset") {
     <div class="w-screen inline-flex mt-1rem">
       <div class="w-1/2 lg:(pl-2rem inline-flex) px-1rem">
         <img class="mobile w-auto max-w-8rem mx-2rem <lg:(mb-1rem max-w-5rem)" src="./assets/windows.png" alt="windows icon">
-        <div class="h-full w-auto lg:inline-flex overflow-scroll">
+        <div class="h-full w-auto lg:inline-flex">
           <div class="w-full inline-flex lg:(flex flex-wrap w-3rem)" v-for="(key, index) in preset.windows" :key="key">
             <div class="lg:(h-[60%] w-full) w-2/3 m-1 button flex justify-center items-center">
               <h6>{{ Object(presetEmoji)[key] }}</h6>
@@ -231,7 +231,7 @@ function power(action: "power" | "reset") {
 
       <div class="w-1/2 lg:(pl-2rem inline-flex) px-1rem">
         <img class="mobile w-auto max-w-8rem mx-2rem <lg:(mb-1rem max-w-5rem)" src="./assets/linux.png" alt="linux icon">
-        <div class="h-full w-auto lg:inline-flex overflow-scroll">
+        <div class="h-full w-auto lg:inline-flex">
           <div class="w-full inline-flex lg:(flex flex-wrap w-3rem)" v-for="(key, index) in preset.linux" :key="key">
             <div class="lg:(h-[60%] w-full) w-2/3 m-1 button flex justify-center items-center">
               <h6>{{ Object(presetEmoji)[key] }}</h6>
