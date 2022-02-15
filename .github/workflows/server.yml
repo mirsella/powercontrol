@@ -9,10 +9,10 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v2
 
-      - name: install app dependencies
+      - name: Install app dependencies
         working-directory: ./server
         run: npm install
 
-      - name: build ts files
+      - name: build TS
         working-directory: ./server
         run: npm run build

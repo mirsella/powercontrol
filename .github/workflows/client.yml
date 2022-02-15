@@ -1,4 +1,4 @@
-name: Build Android
+name: Build Client
 
 on:
   push:
@@ -40,9 +40,9 @@ jobs:
         working-directory: ./client
         run: npx cap copy
 
-      - name: Build app bundle
+      - name: Build Android AssembleRelease
         working-directory: ./client
-        run: cd android && gradle bundle
+        run: cd android && gradle AssembleRelease
 
       - name: Extract Android signing key from env
         working-directory: ./client
@@ -52,11 +52,11 @@ jobs:
 
       - name: Sign dev build
         working-directory: ./client
-        run: jarsigner -keystore android/release.decrypted.jks -storepass "${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" -signedjar ./android/app/build/outputs/bundle/release/app-release-signed.aab ./android/app/build/outputs/bundle/release/app-release.aab release
+        run: jarsigner -keystore android/release.decrypted.jks -storepass "${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" -signedjar ./android/app/build/outputs/apk/release/app-release-unsigned.apk ./app/build/outputs/apk/release/app-release-signed.apk release
 
       - name: Upload release bundle
         uses: actions/upload-artifact@v2
         with:
           name: app-release
-          path: client/android/app/build/outputs/bundle/release/app-release-signed.aab
+          path: client/android/app/build/outputs/apk/release/app-release-signed.apk
           retention-days: 60
