@@ -20,7 +20,7 @@ port.on('data', (data: any) => {
   lastDataDate = new Date()
   if ((new Date().getTime() - lastWatchDate.getTime()) > 10000) {
     watching = true
-    console.log('receiving data watching')
+    // console.log('receiving data watching')
   } else {
     console.log('receiving data ignoring')
   }
@@ -28,7 +28,7 @@ port.on('data', (data: any) => {
 
 setInterval(() => {
   if (watching) {
-    if (new Date().getTime() - lastDataDate.getTime() > 7000) {
+    if (new Date().getTime() - lastDataDate.getTime() > 9000) {
       console.log('timeout reached')
       watching = false
       config.getnextboot().forEach((key: string) => {
