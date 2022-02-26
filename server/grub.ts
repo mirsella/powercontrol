@@ -1,7 +1,7 @@
 const config = require('./config')
 
-let SerialPort = require('serialport');
-let port = new SerialPort('/dev/ttyS0', { baudRate: 9600 });
+import { SerialPort } from 'serialport'
+const port = new SerialPort({ path: "/dev/ttyS0", baudRate: 9600 })
 
 const keypresses: Record<string, any> = {
   "ESC": [0x1b],
