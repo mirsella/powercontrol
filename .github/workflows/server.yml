@@ -1,6 +1,11 @@
 name: build Server
 
-on: push
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '/server/**'
 
 jobs:
   build:
