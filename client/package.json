@@ -23,7 +23,7 @@
     "cordova-res": "^0.15.4",
     "jetifier": "^2.0.0",
     "typescript": "^4.6.2",
-    "vite": "^2.8.5",
+    "vite": "^2.8.6",
     "vite-plugin-windicss": "^1.8.1",
     "vue-tsc": "^0.32.0",
     "windicss": "^3.5.0"
