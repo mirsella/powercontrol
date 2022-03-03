@@ -18,7 +18,7 @@
     "vue": "^3.2.31"
   },
   "devDependencies": {
-    "@capacitor/cli": "^3.4.1",
+    "@capacitor/cli": "^3.4.2",
     "@vitejs/plugin-vue": "^2.2.4",
     "cordova-res": "^0.15.4",
     "jetifier": "^2.0.0",
