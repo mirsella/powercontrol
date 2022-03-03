@@ -1,11 +1,16 @@
 name: build Server
 
 on:
-  push:
+  pull_request:
     branches:
       - main
     paths:
       - 'server/**'
+  push:
+    branches:
+      - main
+    paths:
+      - 'server/**'      
 
 jobs:
   build:
