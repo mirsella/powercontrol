@@ -1,6 +1,11 @@
 name: Build Client
 
 on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'client/**'  
   push:
     branches:
       - main
