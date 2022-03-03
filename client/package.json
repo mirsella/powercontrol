@@ -12,7 +12,7 @@
   "dependencies": {
     "@capacitor-community/wifi": "github:mirsella/capacitor3-wifimanager",
     "@capacitor/android": "^3.4.2",
-    "@capacitor/core": "^3.4.1",
+    "@capacitor/core": "^3.4.2",
     "@robingenz/capacitor-android-dark-mode-support": "^1.0.0",
     "redaxios": "^0.4.1",
     "vue": "^3.2.31"
