@@ -24,7 +24,7 @@
     "jetifier": "^2.0.0",
     "typescript": "^4.6.2",
     "vite": "^2.8.6",
-    "vite-plugin-windicss": "^1.8.2",
+    "vite-plugin-windicss": "^1.8.3",
     "vue-tsc": "^0.32.1",
     "windicss": "^3.5.1"
   }
