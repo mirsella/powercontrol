@@ -10,6 +10,7 @@
     "resources": "cordova-res android --skip-config --copy"
   },
   "dependencies": {
+    "@babel/types": "^7.17.0",
     "@capacitor-community/wifi": "github:mirsella/capacitor3-wifimanager",
     "@capacitor/android": "^3.4.3",
     "@capacitor/core": "^3.4.3",
@@ -25,7 +26,7 @@
     "typescript": "^4.6.2",
     "vite": "^2.8.6",
     "vite-plugin-windicss": "^1.8.3",
-    "vue-tsc": "^0.32.1",
+    "vue-tsc": "^0.33.1",
     "windicss": "^3.5.1"
   }
 }
