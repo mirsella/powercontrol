@@ -151,10 +151,10 @@ function power(action: "power" | "reset") {
       if (res.status === 200 && res.data === action) {
         error.value = ''
         const el = document.querySelector(`#${action}`)
-        el!.className += " duration-1001 shadow-full shadow-green-500"
+        el!.className += " duration-1000 shadow-full shadow-green-500"
         setTimeout(() => {
           el!.className = el!.className.replace(" duration-1000 shadow-full shadow-green-500", "")
-        }, 1000)
+        }, 2000)
       } else { error.value = JSON.stringify({status: res.status, data: res.data}) }
     })
     .catch(err => error.value = err.data)
