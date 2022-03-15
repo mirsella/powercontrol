@@ -154,7 +154,7 @@ function power(action: "power" | "reset") {
         el!.className += " duration-1000 shadow-full shadow-green-500"
         setTimeout(() => {
           el!.className = el!.className.replace(" duration-1000 shadow-full shadow-green-500", "")
-        }, 2000)
+        }, 1000)
       } else { error.value = JSON.stringify({status: res.status, data: res.data}) }
     })
     .catch(err => error.value = err.data)
