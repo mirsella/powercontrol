@@ -1,14 +1,12 @@
 {
-  "name": "dummy-server",
-  "description": "start dummy server on heroku to test, powercontrol.herokuapp.com",
   "scripts": {
     "dev": "npx tsc-watch --onSuccess 'node build/index.js'",
-    "build": "cd dummy-server && npx tsc",
-    "start": "cd dummy-server && node build/index.js"
+    "build": "npx tsc",
+    "start": "node build/index.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
-    "dotenv": "^14.1.0",
+    "dotenv": "^16.0.0",
     "express": "^4.17.1",
     "express-bearer-token": "^2.4.0",
     "fs-extra": "^10.0.0",
