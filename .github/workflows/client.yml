@@ -28,7 +28,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 16.x
+          node-version: 17.x
 
       - name: Install app dependencies
         working-directory: ./client
@@ -60,7 +60,7 @@ jobs:
       - name: Deploy Github Pages
         working-directory: ./client
         run: |
-          git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GHPAGES_REPOSITORY}.git
+          git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
           npx gh-pages -d dist -u "github-actions-bot <support+actions@github.com>"
         env:
-          GITHUB_TOKEN: ${{ secrets.GHPAGES_TOKEN }} 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
