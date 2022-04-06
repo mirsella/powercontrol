@@ -58,8 +58,9 @@ jobs:
           retention-days: 60
 
       - name: Deploy with gh-pages
+        if: github.event_name != 'pull_request'
         run: |
-          git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+          git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/powercontrol.git
           npx gh-pages -d dist -u "github-actions-bot <support+actions@github.com>"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
