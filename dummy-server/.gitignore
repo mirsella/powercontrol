@@ -1,7 +1,0 @@
-.env
-node_modules
-build/
-pnpm-lock.yaml
-yarn.lock
-package-lock.json
-
