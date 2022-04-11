@@ -61,7 +61,7 @@ jobs:
         if: github.event_name != 'pull_request'
         working-directory: ./client
         run: |
-          git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/powercontrol.git
+          git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/mirsella/powercontrol.git
           npx gh-pages -d dist -u "github-actions-bot <support+actions@github.com>"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
