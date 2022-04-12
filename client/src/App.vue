@@ -88,6 +88,13 @@ function savelocalstorage () {
 
 onMounted(() => searchIP())
 function searchIP() {
+  Wifi.getAllIP()
+    .then((e: object) => {
+      const ips = Object.values(e)
+      nativeIPs = ips.map((ip: string) => {
+        return ip.split('.')[2]
+      })
+    })
   const ips = Array.from(IPS.value)
   for (const [index, ip] of ips.entries()) {
     if (ip.match(/\.XXX\./)) {
@@ -260,7 +267,4 @@ body {
   overflow-y: hidden;
 }
 input, textarea, button, select, a { -webkit-tap-highlight-color: rgba(0,0,0,0); }
-/* div {                    */
-/*   border: red solid 1px; */
-/* }                        */
 </style>
