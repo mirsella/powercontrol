@@ -16,7 +16,7 @@
     "@capacitor/core": "^3.4.3",
     "@robingenz/capacitor-android-dark-mode-support": "^1.0.0",
     "redaxios": "^0.4.1",
-    "vue": "^3.2.32"
+    "vue": "^3.2.33"
   },
   "devDependencies": {
     "@capacitor/cli": "^3.4.3",
