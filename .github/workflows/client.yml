@@ -34,7 +34,7 @@ jobs:
         working-directory: ./client
         run: npm run build
         env: 
-          NODE_ENV: ${{ secrets.NODE_ENV }}
+          GHPAGES: ${{ secrets.GHPAGES }}
 
       - name: Capacitor update
         working-directory: ./client
@@ -63,4 +63,4 @@ jobs:
           npx gh-pages -d dist -u "github-actions-bot <support+actions@github.com>"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_ENV: ${{ secrets.NODE_ENV }}
+          GHPAGES: ${{ secrets.GHPAGES }}

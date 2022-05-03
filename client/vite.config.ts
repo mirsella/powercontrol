@@ -7,6 +7,5 @@ export default defineConfig({
     vue(),
     WindiCSS()
   ],
-  // base: process.env.NODE_ENV === 'gh-pages' ? '/powercontrol/' : '/',
-  base: '/powercontrol/'
+  base: process.env.GHPAGES === 'gh-pages' ? '/powercontrol/' : '/',
 })
