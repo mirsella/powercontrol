@@ -36,7 +36,11 @@ jobs:
 
       - name: Build app
         working-directory: ./client
-        run: npm run build
+        run: |
+          echo ${{ secrets.NODE_ENV }}
+          npm run build
+        env: 
+          NODE_ENV: ${{ secrets.NODE_ENV }}
 
       - name: Capacitor update
         working-directory: ./client
