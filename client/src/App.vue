@@ -151,7 +151,7 @@ function getnextboot() {
     .catch(err => error.value = err.data)
 }
 
-function power(action: "power" | "reset") {
+function power(action: "power" | "reset" | "reboot") {
   axios.get(`${connected.value}/${action}`,
     {headers: { Authorization: `Bearer ${token.value}` }})
     .then(res => {
@@ -180,13 +180,23 @@ function power(action: "power" | "reset") {
  
   <h5 v-if="error" class="text-rose-500 w-screen fixed top-4rem text-center dark:bg-black">{{error}}</h5>
 
-  <div id="top" class="h-screen dark:(bg-black text-white) pt-3rem">
+  <div id="top" class="h-screen dark:(bg-black text-white) pt-3rem ">
     <div class="w-screen my-5rem inline-flex justify-center items-center">
       <button id="reset" @click="power('reset')" class="transition button mx-5rem !mobile">
         <svg name="reset" class="mobile w-auto max-w-13rem" enable-background="new 0 0 24 24" viewBox="0 0 24 24"><g><path d="M0,0h24v24H0V0z" fill="none"/></g><g><g><path d="M12,5V2L8,6l4,4V7c3.31,0,6,2.69,6,6c0,2.97-2.17,5.43-5,5.91v2.02c3.95-0.49,7-3.85,7-7.93C20,8.58,16.42,5,12,5z"/><path d="M6,13c0-1.65,0.67-3.15,1.76-4.24L6.34,7.34C4.9,8.79,4,10.79,4,13c0,4.08,3.05,7.44,7,7.93v-2.02 C8.17,18.43,6,15.97,6,13z"/></g></g></svg>
       </button>
+      <button id="reboot" @click="power('reboot')" class="transition button mx-5rem !mobile">
+        <svg name="reboot" class="mobile w-auto max-w-12rem" enable-background="new 0 0 24 24" viewBox="0 0 24 24">
+          <path d="M0 0h24v24H0z" fill="none"/>
+          <path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/>
+          <text font-size="5" x="10" y="18">2×</text>
+        </svg>
+      </button>
       <button id="power" @click="power('power')" class="transition button mx-5rem !mobile">
-        <svg name="power" class="mobile w-auto max-w-12rem" enable-background="new 0 0 24 24" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/></svg>
+        <svg name="power" class="mobile w-auto max-w-12rem" enable-background="new 0 0 24 24" viewBox="0 0 24 24">
+          <path d="M0 0h24v24H0z" fill="none"/>
+          <path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/>
+        </svg>
       </button>
     </div>
 

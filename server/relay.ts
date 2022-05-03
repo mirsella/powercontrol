@@ -1,6 +1,6 @@
 const gpio = require('onoff').Gpio;
-// const config = require('./config')
-import * as config from './config'
+// import * as config from './config'
+const config = require('./config')
 
 let power = new gpio(config.getpins().power, 'high');
 let reset = new gpio(config.getpins().reset, 'high');
@@ -18,6 +18,12 @@ async function presspower () {
     power.writeSync(1);
   }, deboucetime);
 }
+async function reboot() {
+  await presspower()
+  setTimeout(() => {
+    presspower()
+  }, config.getShutdownTime())
+}
 
 function reloadpins () {
   power.unexport();
@@ -29,5 +35,6 @@ function reloadpins () {
 export {
   presspower,
   pressreset,
+  reboot,
   reloadpins
 }

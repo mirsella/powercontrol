@@ -28,7 +28,7 @@ port.on('data', (data: any) => {
 
 setInterval(() => {
   if (watching) {
-    if (new Date().getTime() - lastDataDate.getTime() > 9000) {
+    if (new Date().getTime() - lastDataDate.getTime() > config.getBootTime()) {
       console.log('timeout reached')
       watching = false
       config.getnextboot().forEach((key: string) => {

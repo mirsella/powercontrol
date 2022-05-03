@@ -42,5 +42,10 @@ module.exports = (app: Application) => {
   app.all('/reset', (req, res) => {
     relay.pressreset()
       res.send("reset")
+  }),
+
+  app.all('/reboot', (req, res) => {
+    relay.reboot()
+    res.send("reboot")
   })
 }

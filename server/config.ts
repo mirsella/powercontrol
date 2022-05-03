@@ -3,6 +3,8 @@ import { reloadpins } from "./relay"
 
 type Pins = { reset: Number, power: Number}
 type Config = {
+  bootTime: Number,
+  shutdownTime: Number,
   token: String,
   boot_keypresses: Object,
   pins: Pins
@@ -24,7 +26,9 @@ if (config.token.length === 0) {
 if (
   typeof config.token === "string" && config.token.length > 0 &&
   checkkeypresses(config.boot_keypresses) &&
-  checkpins(config.pins)
+  checkpins(config.pins) &&
+  typeof config.bootTime === "number" && config.bootTime >= 1 &&
+  typeof config.shutdownTime === "number" && config.shutdownTime >= 1
   ) {
     console.log('config ok')
 } else {
@@ -82,11 +86,19 @@ function setpins(pins: Pins) {
   }
   return valid
 }
+function getBootTime() {
+  return config.bootTime
+}
+function getShutdownTime() {
+  return config.shutdownTime
+}
 
 export {
   gettoken,
   getnextboot,
   setnextboot,
   getpins,
-  setpins
+  setpins,
+  getBootTime,
+  getShutdownTime
 }
