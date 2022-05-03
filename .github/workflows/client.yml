@@ -2,13 +2,9 @@ name: Build Client
 
 on:
   pull_request:
-    branches:
-      - main
     paths:
       - 'client/**'  
   push:
-    branches:
-      - main
     paths:
       - 'client/**'
 
@@ -62,7 +58,9 @@ jobs:
           retention-days: 60
 
       - name: Deploy with gh-pages
-        if: github.event_name != 'pull_request'
+        if: |
+          github.event_name != 'pull_request'
+          ($CI_COMMIT_BRANCH != "main" && $CI_COMMIT_REF_NAME != "main")
         working-directory: ./client
         run: |
           git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/mirsella/powercontrol.git

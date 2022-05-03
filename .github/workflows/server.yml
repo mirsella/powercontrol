@@ -2,13 +2,9 @@ name: build Server
 
 on:
   pull_request:
-    branches:
-      - main
     paths:
       - 'server/**'
   push:
-    branches:
-      - main
     paths:
       - 'server/**'      
 
