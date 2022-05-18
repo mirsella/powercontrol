@@ -1,5 +1,5 @@
 const config = require('./config')
-import * as relay from './relay'
+const relay = require('./relay')
 import { Application } from 'express'
 
 module.exports = (app: Application) => {
@@ -9,7 +9,7 @@ module.exports = (app: Application) => {
   })
 
   app.all('/getnextboot', (req, res) => {
-    res.json(config.getnextboot())
+    res.json(config.nextboot)
   })
 
   app.all('/setnextboot', (req, res) => {
@@ -22,7 +22,7 @@ module.exports = (app: Application) => {
   })
 
   app.all('/getpins', (req, res) => {
-    res.json(config.getpins())
+    res.json(config.pins)
   })
 
   app.all('/setpins', (req, res) => {

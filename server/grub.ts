@@ -28,10 +28,10 @@ port.on('data', (data: any) => {
 
 setInterval(() => {
   if (watching) {
-    if (new Date().getTime() - lastDataDate.getTime() > config.getBootTime()) {
+    if (new Date().getTime() - lastDataDate.getTime() > config.BootTime) {
       console.log('timeout reached')
-      watching = false
-      config.getnextboot().forEach((key: string) => {
+      watching = false;
+      config.nextboot.forEach((key: string) => {
         port.write(keypresses[key])
       })
       lastWatchDate = new Date()
