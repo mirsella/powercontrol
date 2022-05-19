@@ -11,19 +11,13 @@ const keypresses: Record<string, any> = {
 }
 
 let lastDataDate = new Date()
-let lastWatchDate = new Date(0,0,0,0,0,0,0)
 let watching = true
 port.on('close', () => console.log('port closed.'));
 port.on('error', (error: any) => console.log('Serial port error: ' + error));
 port.on('open', () => console.log('port open. Data rate: ' + port.baudRate));
 port.on('data', (data: any) => {
   lastDataDate = new Date()
-  if ((new Date().getTime() - lastWatchDate.getTime()) > 10000) {
-    watching = true
-    // console.log('receiving data watching')
-  } else {
-    console.log('receiving data ignoring')
-  }
+  watching = true
 })
 
 setInterval(() => {
@@ -34,7 +28,6 @@ setInterval(() => {
       config.nextboot.forEach((key: string) => {
         port.write(keypresses[key])
       })
-      lastWatchDate = new Date()
     }
   }
-}, 500)
+}, 100)
