@@ -9,7 +9,7 @@ module.exports = (app: Application) => {
   })
 
   app.all('/getnextboot', (req, res) => {
-    res.json(config.nextboot)
+    res.json(config.boot_keypresses)
   })
 
   app.all('/setnextboot', (req, res) => {
