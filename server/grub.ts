@@ -22,7 +22,7 @@ port.on('data', (data: any) => {
 
 setInterval(() => {
   if (watching) {
-    if (new Date().getTime() - lastDataDate.getTime() > config.BootTime) {
+    if (new Date().getTime() - lastDataDate.getTime() > config.bootTime) {
       console.log('timeout reached')
       watching = false;
       config.nextboot.forEach((key: string) => {

@@ -21,7 +21,7 @@ async function reboot() {
   await presspower()
   setTimeout(() => {
     presspower()
-  }, config.ShutdownTime)
+  }, config.shutdownTime)
 }
 
 function reloadpins () {
