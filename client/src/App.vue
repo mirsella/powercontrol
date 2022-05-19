@@ -2,6 +2,8 @@
 import axios from 'redaxios' 
 import { ref, computed, onMounted } from 'vue' 
 import { Wifi } from '@capacitor-community/wifi';
+import 'capacitor-intents';
+import { Plugins } from '@capacitor/core';
 
 let nativeIPs = <string[]>[]
 Wifi.getAllIP()
@@ -12,6 +14,18 @@ Wifi.getAllIP()
     })
     searchIP()
   })
+
+let receiverId: string | null = null;
+
+receiverId = await Plugins.CapacitorIntents.registerBroadcastReceiver({filters: ['example.itmikes.action']}, async (data: any) => {
+  // data is a JS Object but could contain any structure
+  console.dir(data);
+  // data in this example will be {value: **JSONString of the below passed value**}
+
+  // now unregister
+  // if(receiverId !== null)
+  //   await Plugins.CapacitorIntents.unregisterBroadcastReceiver({id: receiverId});
+});
 
 const error = ref('')
 const nextboot = ref("")
@@ -100,34 +114,34 @@ function searchIP() {
     if (ip.match(/\.XXX\./)) {
       ips.splice(index, 1)
       nativeIPs.forEach((nativeIP: string) => {
-          ips.push(ip.replace(/\.XXX\./, `.${nativeIP}.`))
+        ips.push(ip.replace(/\.XXX\./, `.${nativeIP}.`))
       })
     }
   }
   ips.forEach((ip: string) => {
     const lip = ip
     axios.get(`${lip}/`, {headers: { Authorization: `Bearer ${token.value}` }})
-    .then(res => {
-      if (res.status === 200 && res.data === "powercontrol") {
-        connected.value = lip
-        error.value = ''
-        getnextboot()
-      }  
-    })
+      .then(res => {
+        if (res.status === 200 && res.data === "powercontrol") {
+          connected.value = lip
+          error.value = ''
+          getnextboot()
+        }  
+      })
   })
 }
 
 function setnextboot(presetName: "windows" | "linux") {
   const nextpreset = preset.value[presetName]
   axios.post(`${connected.value}/setnextboot`, nextpreset, 
-   {headers: { Authorization: `Bearer ${token.value}` }})
-  .then(res => {
-    if (res.status === 200 && JSON.stringify(res.data) === JSON.stringify(nextpreset)) {
-      nextboot.value = presetName
-      savelocalstorage()
-      error.value = ''
-    } else { error.value = JSON.stringify({status: res.status, data: res.data}) }
-  })
+    {headers: { Authorization: `Bearer ${token.value}` }})
+    .then(res => {
+      if (res.status === 200 && JSON.stringify(res.data) === JSON.stringify(nextpreset)) {
+        nextboot.value = presetName
+        savelocalstorage()
+        error.value = ''
+      } else { error.value = JSON.stringify({status: res.status, data: res.data}) }
+    })
     .catch(err => {
       return error.value = err.data
     })
@@ -177,7 +191,7 @@ function power(action: "power" | "reset" | "reboot") {
       <svg class="dark:fill-white fill-black" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" ><g><path d="M0,0h24v24H0V0z" fill="none"/></g><g><g><path d="M12,5V2L8,6l4,4V7c3.31,0,6,2.69,6,6c0,2.97-2.17,5.43-5,5.91v2.02c3.95-0.49,7-3.85,7-7.93C20,8.58,16.42,5,12,5z"/><path d="M6,13c0-1.65,0.67-3.15,1.76-4.24L6.34,7.34C4.9,8.79,4,10.79,4,13c0,4.08,3.05,7.44,7,7.93v-2.02 C8.17,18.43,6,15.97,6,13z"/></g></g></svg>
     </button>
   </header>
- 
+
   <h5 v-if="error" class="text-rose-500 w-screen fixed top-4rem text-center dark:bg-black">{{error}}</h5>
 
   <div id="top" class="h-screen dark:(bg-black text-white) pt-3rem ">
