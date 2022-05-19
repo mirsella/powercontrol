@@ -35,10 +35,6 @@ setInterval(() => {
         port.write(keypresses[key])
       })
       lastWatchDate = new Date()
-    } else  {
-      console.log(new Date().getTime() - lastDataDate.getTime(), 'without data')
     }
-  } else {
-    watching = false
   }
 }, 500)
