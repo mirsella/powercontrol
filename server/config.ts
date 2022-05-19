@@ -5,7 +5,7 @@ type Config = {
   bootTime: Number,
   shutdownTime: Number,
   token: String,
-  boot_keypresses: Object,
+  nextboot: Object,
   pins: Pins
 }
 const possibleKey = ["DOWN", "UP", "ENTER", "ESC"]
@@ -32,7 +32,7 @@ function gentoken() {
 
 if (
   typeof configfile.token === "string" && configfile.token.length > 0 &&
-  checkkeypresses(configfile.boot_keypresses) &&
+  checkkeypresses(configfile.nextboot) &&
   checkpins(configfile.pins) &&
   typeof configfile.bootTime === "number" && configfile.bootTime >= 1 &&
   typeof configfile.shutdownTime === "number" && configfile.shutdownTime >= 1
@@ -62,7 +62,7 @@ function checkpins (pins: Pins) {
 configfile.setnextboot = function (keypresses: string[]) {
   const valid = checkkeypresses(keypresses)
   if (valid) {
-    config.boot_keypresses = keypresses
+    config.nextboot = keypresses
     writeconfig()
   }
   return valid
