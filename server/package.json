@@ -13,7 +13,7 @@
     "helmet": "^5.1.0",
     "morgan": "^1.10.0",
     "onoff": "^6.0.3",
-    "serialport": "^10.3.0"
+    "serialport": "^10.4.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12",
