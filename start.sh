@@ -20,3 +20,4 @@ fi
 
 cd $path/server
 npm run start > $log 2>&1
+[ "$?" -ne 0 ] && notif "powercontrol crashed $?"
