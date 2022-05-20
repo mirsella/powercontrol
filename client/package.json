@@ -10,7 +10,7 @@
     "resources": "cordova-res android --skip-config --copy"
   },
   "dependencies": {
-    "@babel/types": "^7.17.12",
+    "@babel/types": "^7.18.0",
     "@capacitor-community/wifi": "github:mirsella/capacitor3-wifimanager",
     "@capacitor/android": "^3.5.1",
     "@capacitor/core": "^3.5.1",
