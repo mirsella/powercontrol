@@ -4,8 +4,6 @@ on:
   pull_request:
     paths:
       - 'client/**'  
-    tags:
-      - '^(?!dependabot).+'
   push:
     paths:
       - 'client/**'
