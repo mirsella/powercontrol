@@ -86,6 +86,13 @@ function savelocalstorage () {
   window.localStorage.setItem("preset", JSON.stringify(preset.value))
 }
 
+function copySettings() {
+  console.log("in copy settings")
+}
+function pasteSettings() {
+  console.log("in copy settings")
+}
+
 onMounted(() => searchIP())
 function searchIP() {
   document.querySelector('#refresh')?.classList.add('animate-spin')
@@ -213,7 +220,11 @@ function power(action: "power" | "reset" | "reboot") {
   </div>
 
   <div id="settings" class="dark:(bg-black text-white) h-screen pt-6rem w-screen">
-    <h1 class="text-center text-3xl">Settings</h1>
+    <div class="text-center">
+      <span class="text-3xl mx-5">Settings</span>
+      <button @click="copySettings" class="button transition text-xl mx-3 px-4 py-2">📋⬇</button>
+      <button @click="pasteSettings"class="button transition text-xl mx-3 px-4 py-2">📋⬆</button>
+    </div>
 
     <div class="w-screen h-4rem my-1rem px-4rem">
       <input type="text" placeholder="token" v-model="token" @change="savelocalstorage" class="button transition w-full px-1rem py-2">
