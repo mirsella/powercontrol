@@ -2,6 +2,8 @@
 import axios from 'redaxios' 
 import { ref, computed, onMounted } from 'vue' 
 import { Wifi } from '@capacitor-community/wifi';
+import { Capacitor } from '@capacitor/core';
+import { Clipboard } from '@capacitor/clipboard';
 
 let nativeIPs = <string[]>[]
 Wifi.getAllIP()
@@ -13,8 +15,9 @@ Wifi.getAllIP()
     searchIP()
   })
 
-const error = ref('')
+const error = ref("")
 const nextboot = ref("")
+let importInput = ref("")
 const presetEmoji = {
   "ENTER": "⏎",
   "DOWN": "↓",
@@ -87,10 +90,19 @@ function savelocalstorage () {
 }
 
 function copySettings() {
-  console.log("in copy settings")
+  Clipboard.write({ string: JSON.stringify({token: token.value, ips: IPS.value, preset: preset.value}) })
 }
-function pasteSettings() {
-  console.log("in copy settings")
+function importSettings() {
+  console.log("importing settings", importInput.value)
+  if (importInput.value !== "") {
+    const parsed = JSON.parse(importInput.value)
+    if (typeof parsed.token === "string" && typeof parsed.ips === "object" && typeof parsed.preset === "object") {
+      token.value = parsed.token
+      IPS.value = parsed.ips
+      preset.value = parsed.preset
+      savelocalstorage()
+    }
+  }
 }
 
 onMounted(() => searchIP())
@@ -220,10 +232,12 @@ function power(action: "power" | "reset" | "reboot") {
   </div>
 
   <div id="settings" class="dark:(bg-black text-white) h-screen pt-6rem w-screen">
-    <div class="text-center">
+    <div class="text-center text-xl ">
       <span class="text-3xl mx-5">Settings</span>
-      <button @click="copySettings" class="button transition text-xl mx-3 px-4 py-2">📋⬇</button>
-      <button @click="pasteSettings"class="button transition text-xl mx-3 px-4 py-2">📋⬆</button>
+      <!-- <button @click="importSettings" class="button transition text-xl mx-3 px-4 py-2">📋⬇</button> -->
+      <button @click="copySettings" class="button transition mx-4 px-4 py-2">📋⬆</button>
+      <input @input="importSettings" :model="importInput" type="text" placeholder="import settings" name="settings" id="settings" class="button transition mx-3 px-1rem py-2 my-2 <sm:my-4"/>
+      out: {{importInput}}
     </div>
 
     <div class="w-screen h-4rem my-1rem px-4rem">
