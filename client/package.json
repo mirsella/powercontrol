@@ -23,7 +23,7 @@
     "@vitejs/plugin-vue": "^2.3.3",
     "cordova-res": "^0.15.4",
     "jetifier": "^2.0.0",
-    "typescript": "^4.6.4",
+    "typescript": "^4.7.2",
     "vite": "^2.9.9",
     "vite-plugin-windicss": "^1.8.4",
     "vue-tsc": "^0.34.16",
