@@ -17,7 +17,7 @@ Wifi.getAllIP()
 
 const error = ref("")
 const nextboot = ref("")
-let importInput = ref("")
+const importModel = ref()
 const presetEmoji = {
   "ENTER": "⏎",
   "DOWN": "↓",
@@ -93,18 +93,24 @@ function copySettings() {
   Clipboard.write({ string: JSON.stringify({token: token.value, ips: IPS.value, preset: preset.value}) })
 }
 function importSettings() {
-  console.log("importing settings", importInput.value)
-  if (importInput.value !== "") {
-    const parsed = JSON.parse(importInput.value)
-    if (typeof parsed.token === "string" && typeof parsed.ips === "object" && typeof parsed.preset === "object") {
-      token.value = parsed.token
-      IPS.value = parsed.ips
-      preset.value = parsed.preset
-      savelocalstorage()
+  if (importModel.value !== "") {
+    try {
+      const parsed = JSON.parse(importModel.value)
+      if (typeof parsed.token === "string" && typeof parsed.ips === "object" && typeof parsed.preset === "object") {
+        token.value = parsed.token
+        IPS.value = parsed.ips
+        preset.value = parsed.preset
+        searchIP()
+        savelocalstorage()
+      } else {
+      throw new Error("Invalid JSON")
+      }
+    } catch (e: any) {
+      error.value = e
     }
   }
 }
-
+    
 onMounted(() => searchIP())
 function searchIP() {
   document.querySelector('#refresh')?.classList.add('animate-spin')
@@ -124,31 +130,36 @@ function searchIP() {
       })
     }
   }
+const calls: Promise<void>[] = []
   ips.forEach((ip: string) => {
     const lip = ip
-    axios.get(`${lip}/`, {headers: { Authorization: `Bearer ${token.value}` }})
-    .then(res => {
-      if (res.status === 200 && res.data === "powercontrol") {
-        connected.value = lip
-        error.value = ''
-        getnextboot()
-      }  
-    })
+    calls.push(
+      axios.get(`${lip}/`, {headers: { Authorization: `Bearer ${token.value}` }})
+      .then(res => {
+        if (res.status === 200 && res.data === "powercontrol") {
+          connected.value = lip
+          error.value = ''
+          getnextboot()
+        }  
+      })
+    )
   })
-  document.querySelector('#refresh')?.classList.remove('animate-spin')
+  Promise.all(calls)
+  .then(() => document.querySelector('#refresh')?.classList.remove('animate-spin'))
+  .catch(() => document.querySelector('#refresh')?.classList.remove('animate-spin'))
 }
 
 function setnextboot(presetName: "windows" | "linux") {
   const nextpreset = preset.value[presetName]
   axios.post(`${connected.value}/setnextboot`, nextpreset, 
-   {headers: { Authorization: `Bearer ${token.value}` }})
-  .then(res => {
-    if (res.status === 200 && JSON.stringify(res.data) === JSON.stringify(nextpreset)) {
-      nextboot.value = presetName
-      savelocalstorage()
-      error.value = ''
-    } else { error.value = JSON.stringify({status: res.status, data: res.data}) }
-  })
+    {headers: { Authorization: `Bearer ${token.value}` }})
+    .then(res => {
+      if (res.status === 200 && JSON.stringify(res.data) === JSON.stringify(nextpreset)) {
+        nextboot.value = presetName
+        savelocalstorage()
+        error.value = ''
+      } else { error.value = JSON.stringify({status: res.status, data: res.data}) }
+    })
     .catch(err => {
       return error.value = err.data
     })
@@ -198,7 +209,7 @@ function power(action: "power" | "reset" | "reboot") {
       <svg id="refresh" class="dark:fill-white fill-black" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" ><g><path d="M0,0h24v24H0V0z" fill="none"/></g><g><g><path d="M12,5V2L8,6l4,4V7c3.31,0,6,2.69,6,6c0,2.97-2.17,5.43-5,5.91v2.02c3.95-0.49,7-3.85,7-7.93C20,8.58,16.42,5,12,5z"/><path d="M6,13c0-1.65,0.67-3.15,1.76-4.24L6.34,7.34C4.9,8.79,4,10.79,4,13c0,4.08,3.05,7.44,7,7.93v-2.02 C8.17,18.43,6,15.97,6,13z"/></g></g></svg>
     </button>
   </header>
- 
+
   <h5 v-if="error" class="text-rose-500 w-screen fixed top-4rem text-center dark:bg-black">{{error}}</h5>
 
   <div id="top" class="h-screen dark:(bg-black text-white) pt-3rem ">
@@ -235,61 +246,60 @@ function power(action: "power" | "reset" | "reboot") {
     <div class="text-center text-xl ">
       <span class="text-3xl mx-5">Settings</span>
       <!-- <button @click="importSettings" class="button transition text-xl mx-3 px-4 py-2">📋⬇</button> -->
-      <button @click="copySettings" class="button transition mx-4 px-4 py-2">📋⬆</button>
-      <input @input="importSettings" :model="importInput" type="text" placeholder="import settings" name="settings" id="settings" class="button transition mx-3 px-1rem py-2 my-2 <sm:my-4"/>
-      out: {{importInput}}
+      <button @click="copySettings" class="button transition mx-4 px-4 py-2">📋export</button>
+      <input @input="importSettings" v-model="importModel" type="text" placeholder="import settings" name="settings" id="settings" class="button transition mx-3 px-1rem py-2 my-2 <sm:my-4"/>
     </div>
 
-    <div class="w-screen h-4rem my-1rem px-4rem">
-      <input type="text" placeholder="token" v-model="token" @change="savelocalstorage" class="button transition w-full px-1rem py-2">
-    </div>
-
-    <div class="lg:(pt-10 p-10) p-10 pt-0 w-screen lg:h-1/2 h-1/3 flex flex-wrap <lg:justify-center overflow-y-scroll">
-      <div class="flex h-min m-3">
-        <input type="text" @keyup.enter="newIP" :class="newIPPrompt" class="mx-3 w-10rem text-white p-2 rounded transition button duration-300" v-model="newip" placeholder="new IP">
-        <button class="transition button rounded-lg p-4" @click="newIP">➕</button>
+      <div class="w-screen h-4rem my-1rem px-4rem">
+        <input type="text" placeholder="token" v-model="token" @change="savelocalstorage" class="button transition w-full px-1rem py-2">
       </div>
-      <div class="text-center m-3 h-min wrap " v-for="(ip, index) in IPS" :key="ip">
-        <span class="mx-1rem">{{ip}}</span>
-        <button class="transition button rounded-lg p-3" @click="IPS.splice(index, 1) && savelocalstorage()">❌</button>
-      </div>
-    </div>
 
-    <div class="w-screen inline-flex mt-1rem">
-      <div class="w-1/2 lg:(pl-2rem inline-flex) px-1rem">
-        <img class="mobile w-auto max-w-8rem mx-2rem <lg:(mb-1rem max-w-5rem)" src="./assets/windows.png" alt="windows icon">
-        <div class="h-full w-auto lg:inline-flex">
-          <div class="w-full inline-flex lg:(flex flex-wrap w-3rem)" v-for="(key, index) in preset.windows" :key="key">
-            <div class="lg:(h-[60%] w-full) w-2/3 m-1 button flex justify-center items-center">
-              <h6>{{ Object(presetEmoji)[key] }}</h6>
-            </div>
-            <button class="lg:(self-end h-[30%] w-full) w-1/3 h-full m-1 button transition" @click="preset.windows.splice(index, 1); savelocalstorage()">❌</button>
-          </div>
-          <div class="inline-flex w-full lg:(flex flex-wrap w-3rem)">
-            <button class="m-1 transition button w-full" @click="preset.windows.push('UP'); savelocalstorage()">{{presetEmoji.UP}}</button>
-            <button class="m-1 transition button w-full" @click="preset.windows.push('ENTER'); savelocalstorage()">{{presetEmoji.ENTER}}</button>
-            <button class="m-1 transition button w-full" @click="preset.windows.push('DOWN'); savelocalstorage()">{{presetEmoji.DOWN}}</button>
-          </div>
+      <div class="lg:(pt-10 p-10) p-10 pt-0 w-screen lg:h-1/2 h-1/3 flex flex-wrap <lg:justify-center overflow-y-scroll">
+        <div class="flex h-min m-3">
+          <input type="text" @keyup.enter="newIP" :class="newIPPrompt" class="mx-3 w-10rem text-white p-2 rounded transition button duration-300" v-model="newip" placeholder="new IP">
+          <button class="transition button rounded-lg p-4" @click="newIP">➕</button>
+        </div>
+        <div class="text-center m-3 h-min wrap " v-for="(ip, index) in IPS" :key="ip">
+          <span class="mx-1rem">{{ip}}</span>
+          <button class="transition button rounded-lg p-3" @click="IPS.splice(index, 1) && savelocalstorage()">❌</button>
         </div>
       </div>
 
-      <div class="w-1/2 lg:(pl-2rem inline-flex) px-1rem">
-        <img class="mobile w-auto max-w-8rem mx-2rem <lg:(mb-1rem max-w-5rem)" src="./assets/linux.png" alt="linux icon">
-        <div class="h-full w-auto lg:inline-flex">
-          <div class="w-full inline-flex lg:(flex flex-wrap w-3rem)" v-for="(key, index) in preset.linux" :key="key">
-            <div class="lg:(h-[60%] w-full) w-2/3 m-1 button flex justify-center items-center">
-              <h6>{{ Object(presetEmoji)[key] }}</h6>
+      <div class="w-screen inline-flex mt-1rem">
+        <div class="w-1/2 lg:(pl-2rem inline-flex) px-1rem">
+          <img class="mobile w-auto max-w-8rem mx-2rem <lg:(mb-1rem max-w-5rem)" src="./assets/windows.png" alt="windows icon">
+          <div class="h-full w-auto lg:inline-flex">
+            <div class="w-full inline-flex lg:(flex flex-wrap w-3rem)" v-for="(key, index) in preset.windows" :key="key">
+              <div class="lg:(h-[60%] w-full) w-2/3 m-1 button flex justify-center items-center">
+                <h6>{{ Object(presetEmoji)[key] }}</h6>
+              </div>
+              <button class="lg:(self-end h-[30%] w-full) w-1/3 h-full m-1 button transition" @click="preset.windows.splice(index, 1); savelocalstorage()">❌</button>
             </div>
-            <button class="lg:(self-end h-[30%] w-full) w-1/3 h-full m-1 button transition" @click="preset.linux.splice(index, 1); savelocalstorage()">❌</button>
+            <div class="inline-flex w-full lg:(flex flex-wrap w-3rem)">
+              <button class="m-1 transition button w-full" @click="preset.windows.push('UP'); savelocalstorage()">{{presetEmoji.UP}}</button>
+              <button class="m-1 transition button w-full" @click="preset.windows.push('ENTER'); savelocalstorage()">{{presetEmoji.ENTER}}</button>
+              <button class="m-1 transition button w-full" @click="preset.windows.push('DOWN'); savelocalstorage()">{{presetEmoji.DOWN}}</button>
+            </div>
           </div>
-          <div class="inline-flex w-full lg:(flex flex-wrap w-3rem)">
-            <button class="m-1 transition button w-full" @click="preset.linux.push('UP'); savelocalstorage()">{{presetEmoji.UP}}</button>
-            <button class="m-1 transition button w-full" @click="preset.linux.push('ENTER'); savelocalstorage()">{{presetEmoji.ENTER}}</button>
-            <button class="m-1 transition button w-full" @click="preset.linux.push('DOWN'); savelocalstorage()">{{presetEmoji.DOWN}}</button>
+        </div>
+
+        <div class="w-1/2 lg:(pl-2rem inline-flex) px-1rem">
+          <img class="mobile w-auto max-w-8rem mx-2rem <lg:(mb-1rem max-w-5rem)" src="./assets/linux.png" alt="linux icon">
+          <div class="h-full w-auto lg:inline-flex">
+            <div class="w-full inline-flex lg:(flex flex-wrap w-3rem)" v-for="(key, index) in preset.linux" :key="key">
+              <div class="lg:(h-[60%] w-full) w-2/3 m-1 button flex justify-center items-center">
+                <h6>{{ Object(presetEmoji)[key] }}</h6>
+              </div>
+              <button class="lg:(self-end h-[30%] w-full) w-1/3 h-full m-1 button transition" @click="preset.linux.splice(index, 1); savelocalstorage()">❌</button>
+            </div>
+            <div class="inline-flex w-full lg:(flex flex-wrap w-3rem)">
+              <button class="m-1 transition button w-full" @click="preset.linux.push('UP'); savelocalstorage()">{{presetEmoji.UP}}</button>
+              <button class="m-1 transition button w-full" @click="preset.linux.push('ENTER'); savelocalstorage()">{{presetEmoji.ENTER}}</button>
+              <button class="m-1 transition button w-full" @click="preset.linux.push('DOWN'); savelocalstorage()">{{presetEmoji.DOWN}}</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
   </div>
 
   <button @click="settingsClick" class="w-3rem h-3rem p-2 rounded-full bg-pink-600 right-5 bottom-5 fixed text-white">
