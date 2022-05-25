@@ -1,6 +1,6 @@
 {
   "name": "powercontrol-client",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",

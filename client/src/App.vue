@@ -109,6 +109,7 @@ function importSettings() {
       console.log("couldn't parse ", importModel.value)
       error.value = e
     }
+    importModel.value = ""
   }
 }
     
