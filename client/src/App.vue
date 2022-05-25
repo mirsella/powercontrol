@@ -106,6 +106,7 @@ function importSettings() {
       throw new Error("Invalid JSON")
       }
     } catch (e: any) {
+      console.log("couldn't parse ", importModel.value)
       error.value = e
     }
   }
@@ -246,21 +247,21 @@ function power(action: "power" | "reset" | "reboot") {
     <div class="text-center px-4rem">
       <span class="text-3xl mx-5">Settings</span>
       <button @click="copySettings" class="button transition mx-4 px-4 py-2">📋export</button>
-      <input class="button transition px-1rem py-2 my-2 <sm:(my-1rem w-full px-1rem)" @input="importSettings" :model="importModel" type="text" placeholder="import settings" name="settings" id="settings"/>
+      <input class="button transition px-1rem py-2 my-2 <sm:(my-1rem w-full px-1rem)" @input="importSettings" v-model="importModel" type="text" placeholder="import settings" name="settings" id="settings"/>
     </div>
 
     <div class="w-screen my-1rem px-4rem">
-      <input class="button transition w-full px-1rem py-2" type="text" placeholder="token" :model="token" @change="savelocalstorage">
+      <input class="button transition w-full px-1rem py-2" type="text" placeholder="token" v-model="token" @change="savelocalstorage">
     </div>
 
-    <div class="lg:(pt-10 p-10) p-10 pt-0 w-screen lg:h-1/2 h-1/3 flex flex-wrap <lg:justify-center overflow-y-scroll">
-      <div class="flex h-min m-3">
-        <input type="text" @keyup.enter="newIP" :class="newIPPrompt" class="mx-3 w-10rem text-white p-2 rounded transition button duration-300" v-model="newip" placeholder="new IP">
-        <button class="transition button rounded-lg p-4" @click="newIP">➕</button>
+    <div class="pt-0 w-screen lg:h-1/2 h-1/3 flex flex-wrap <lg:justify-center overflow-y-scroll">
+      <div class="flex h-min my-3 <sm:(w-screen px-4rem)">
+        <input class="mr-2 text-white w-full px-2 transition button" type="text" @keyup.enter="newIP" :class="newIPPrompt" v-model="newip" placeholder="new IP">
+        <button class="transition button rounded-lg p-2" @click="newIP">➕</button>
       </div>
-      <div class="text-center m-3 h-min wrap " v-for="(ip, index) in IPS" :key="ip">
-        <span class="mx-1rem">{{ip}}</span>
-        <button class="transition button rounded-lg p-3" @click="IPS.splice(index, 1) && savelocalstorage()">❌</button>
+      <div class="text-center my-3 wrap <sm:(w-screen px-4rem)" v-for="(ip, index) in IPS" :key="ip">
+        <span class="mx-1rem w-full">{{ip}}</span>
+        <button class="transition button rounded-lg p-2" @click="IPS.splice(index, 1) && savelocalstorage()">❌</button>
       </div>
     </div>
 
