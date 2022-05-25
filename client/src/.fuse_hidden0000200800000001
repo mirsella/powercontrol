@@ -131,7 +131,7 @@ function searchIP() {
       })
     }
   }
-const calls: Promise<void>[] = []
+  const calls: Promise<void>[] = []
   ips.forEach((ip: string) => {
     const lip = ip
     calls.push(
@@ -145,7 +145,8 @@ const calls: Promise<void>[] = []
       })
     )
   })
-  Promise.all(calls)
+  calls.push(new Promise(resolve => setTimeout(resolve, 1000)))
+  Promise.allSettled(calls)
   .then(() => document.querySelector('#refresh')?.classList.remove('animate-spin'))
   .catch(() => document.querySelector('#refresh')?.classList.remove('animate-spin'))
 }
@@ -243,7 +244,7 @@ function power(action: "power" | "reset" | "reboot") {
     </div>
   </div>
 
-  <div id="settings" class="dark:(bg-black text-white) h-screen pt-6rem w-screen">
+  <div id="settings" class="dark:(bg-black text-white) h-screen pt-6rem w-screen md:text-xl lg-text-3xl">
 
     <div class="text-center px-4rem">
       <span class="text-3xl mx-5">Settings</span>
@@ -255,14 +256,14 @@ function power(action: "power" | "reset" | "reboot") {
       <input class="button transition w-full px-1rem py-2" type="text" placeholder="token" v-model="token" @change="savelocalstorage">
     </div>
 
-    <div class="pt-0 w-screen lg:h-1/2 h-1/3 flex flex-wrap <lg:justify-center overflow-y-scroll">
-      <div class="flex h-min my-3 <sm:(w-screen px-4rem)">
+    <div class="pt-0 w-screen lg:h-1/2 h-1/3 flex flex-wrap content-start md:px-4rem <lg:justify-center overflow-y-scroll">
+      <div class="flex h-min m-3 <sm:(w-screen px-4rem)">
         <input class="mr-2 text-white w-full px-2 transition button" type="text" @keyup.enter="newIP" :class="newIPPrompt" v-model="newip" placeholder="new IP">
-        <button class="transition button rounded-lg p-2" @click="newIP">➕</button>
+        <button class="transition button rounded-lg p-2 mx-1" @click="newIP">➕</button>
       </div>
-      <div class="text-center my-3 wrap <sm:(w-screen px-4rem)" v-for="(ip, index) in IPS" :key="ip">
-        <span class="mx-1rem w-full">{{ip}}</span>
-        <button class="transition button rounded-lg p-2" @click="IPS.splice(index, 1) && savelocalstorage()">❌</button>
+      <div class="flex text-center m-3 wrap h-min <sm:(w-screen px-4rem)" v-for="(ip, index) in IPS" :key="ip">
+        <span class="w-full h-full truncate p-2">{{ip}}</span>
+        <button class="transition button rounded-lg p-2 mx-1" @click="IPS.splice(index, 1) && savelocalstorage()">❌</button>
       </div>
     </div>
 
