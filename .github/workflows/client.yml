@@ -7,8 +7,6 @@ on:
   push:
     paths:
       - 'client/**'
-    tags:
-      - '^(?!dependabot).+'
 
 jobs:
   build:
