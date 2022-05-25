@@ -6,9 +6,7 @@ on:
       - 'server/**'
   push:
     paths:
-      - 'server/**'
-    tags:
-      - '^(?!dependabot).+'      
+      - 'server/**'    
 
 jobs:
   build:
