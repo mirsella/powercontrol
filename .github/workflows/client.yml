@@ -35,8 +35,6 @@ jobs:
         uses: github/codeql-action/init@v2
         with:
          languages: java, typescript, javascript
-         paths:
-          - client
 
       - name: Install app dependencies
         working-directory: ./client
