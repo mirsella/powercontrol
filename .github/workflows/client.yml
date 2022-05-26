@@ -31,6 +31,11 @@ jobs:
         with:
           node-version: 17.x
 
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+         languages: java, typescript, javascript
+
       - name: Install app dependencies
         working-directory: ./client
         run: npm install
@@ -57,3 +62,6 @@ jobs:
           name: app-debug
           path: client/android/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 60
+     
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
