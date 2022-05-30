@@ -35,12 +35,12 @@ module.exports = (app: Application) => {
   })
 
   app.all('/power', (req, res) => {
-    relay.presspower()
+    relay.power()
       res.send("power")
   })
 
   app.all('/reset', (req, res) => {
-    relay.pressreset()
+    relay.reset()
       res.send("reset")
   }),
 

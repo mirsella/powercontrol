@@ -73,7 +73,6 @@ configfile.setpins = function (pins: Pins) {
   if (valid) {
     config.pins = pins
     writeconfig()
-    // reloadpins
   }
   return valid
 }

@@ -32,8 +32,7 @@ function reloadpins () {
 }
 
 export {
-  presspower,
-  pressreset,
-  reboot,
-  reloadpins
+  power,
+  reset,
+  reboot
 }
