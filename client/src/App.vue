@@ -2,7 +2,6 @@
 import axios from 'redaxios' 
 import { ref, computed, onMounted } from 'vue' 
 import { Wifi } from '@capacitor-community/wifi';
-import { Capacitor } from '@capacitor/core';
 import { Clipboard } from '@capacitor/clipboard';
 
 let nativeIPs = <string[]>[]
@@ -115,6 +114,7 @@ function importSettings() {
     
 onMounted(() => searchIP())
 function searchIP() {
+  error.value = ""
   document.querySelector('#refresh')?.classList.add('animate-spin')
   Wifi.getAllIP()
     .then((e: object) => {
@@ -213,7 +213,7 @@ function power(action: "power" | "reset" | "reboot") {
     </button>
   </header>
 
-  <h5 v-if="error" class="text-rose-500 w-screen fixed top-4rem text-center dark:bg-black">{{error}}</h5>
+  <h5 v-if="error" class="text-rose-500 w-screen fixed top-4rem text-center bg-transparent">{{error}}</h5>
 
   <div id="top" class="h-screen dark:(bg-black text-white) pt-3rem ">
     <div class="w-screen my-5rem inline-flex justify-center items-center">
@@ -245,33 +245,33 @@ function power(action: "power" | "reset" | "reboot") {
     </div>
   </div>
 
-  <div id="settings" class="dark:(bg-black text-white) h-screen pt-6rem w-screen md:text-xl lg-text-3xl">
+  <div id="settings" class="dark:(bg-black text-white) h-screen pt-6rem <sm:pt-5rem w-screen md:text-xl lg-text-3xl">
 
-    <div class="text-center px-4rem">
+    <div class="text-center px-2rem">
       <span class="text-3xl mx-5">Settings</span>
-      <button @click="copySettings" class="button transition mx-4 px-4 py-2">📋export</button>
-      <input class="button transition px-1rem py-2 my-2 <sm:(my-1rem w-full px-1rem)" @input="importSettings" v-model="importModel" type="text" placeholder="import settings" name="settings" id="settings"/>
+      <button @click="copySettings" class="button transition px-1rem py-2 my-2 md:m-2rem">📋export</button>
+      <input class="button transition px-1rem py-2 my-2 <sm:(w-full px-1rem)" @input="importSettings" v-model="importModel" type="text" placeholder="paste settings here" name="settings" id="settings"/>
     </div>
 
-    <div class="w-screen my-1rem px-4rem">
+    <div class="w-screen my-1rem px-2rem">
       <input class="button transition w-full px-1rem py-2" type="text" placeholder="token" v-model="token" @change="savelocalstorage">
     </div>
 
-    <div class="pt-0 w-screen lg:h-1/2 h-1/3 flex flex-wrap content-start md:px-4rem <lg:justify-center overflow-y-scroll">
-      <div class="flex h-min m-3 <sm:(w-screen px-4rem)">
+    <div class="pt-0 w-screen lg:h-2/5 h-1/3 flex flex-wrap content-start md:px-4rem <lg:justify-center overflow-y-scroll">
+      <div class="flex h-min my-3 <sm:(w-screen px-2rem)">
         <input class="mr-2 text-white w-full px-2 transition button" type="text" @keyup.enter="newIP" :class="newIPPrompt" v-model="newip" placeholder="new IP">
         <button class="transition button rounded-lg p-2 mx-1" @click="newIP">➕</button>
       </div>
-      <div class="flex text-center m-3 wrap h-min <sm:(w-screen px-4rem)" v-for="(ip, index) in IPS" :key="ip">
-        <span class="w-full h-full truncate p-2">{{ip}}</span>
+      <div class="flex text-center m-3 wrap h-min <sm:(mx-0 w-screen px-2rem)" v-for="(ip, index) in IPS" :key="ip">
+        <span class="w-full h-full overflow-y-scroll p-2">{{ip}}</span>
         <button class="transition button rounded-lg p-2 mx-1" @click="IPS.splice(index, 1) && savelocalstorage()">❌</button>
       </div>
     </div>
 
     <div class="w-screen inline-flex mt-1rem">
       <div class="w-1/2 lg:(pl-2rem inline-flex) px-1rem">
-        <img class="mobile w-auto max-w-8rem mx-2rem <lg:(mb-1rem max-w-5rem)" src="./assets/windows.png" alt="windows icon">
-        <div class="h-full w-auto lg:inline-flex">
+        <img class="mobile max-w-10rem mx-2rem <lg:(mb-1rem max-w-5rem)" src="./assets/windows.png" alt="windows icon">
+        <div class="lg:inline-flex h-max-13rem overflow-auto">
           <div class="w-full inline-flex lg:(flex flex-wrap w-3rem)" v-for="(key, index) in preset.windows" :key="key">
             <div class="lg:(h-[60%] w-full) w-2/3 m-1 button flex justify-center items-center">
               <h6>{{ Object(presetEmoji)[key] }}</h6>
@@ -287,8 +287,8 @@ function power(action: "power" | "reset" | "reboot") {
       </div>
 
       <div class="w-1/2 lg:(pl-2rem inline-flex) px-1rem">
-        <img class="mobile w-auto max-w-8rem mx-2rem <lg:(mb-1rem max-w-5rem)" src="./assets/linux.png" alt="linux icon">
-        <div class="h-full w-auto lg:inline-flex">
+        <img class="mobile max-w-12rem mx-2rem <lg:(mb-1rem max-w-5rem)" src="./assets/linux.png" alt="linux icon">
+        <div class="lg:inline-flex h-max-13rem overflow-auto">
           <div class="w-full inline-flex lg:(flex flex-wrap w-3rem)" v-for="(key, index) in preset.linux" :key="key">
             <div class="lg:(h-[60%] w-full) w-2/3 m-1 button flex justify-center items-center">
               <h6>{{ Object(presetEmoji)[key] }}</h6>
