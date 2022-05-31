@@ -4,9 +4,9 @@ import { ref, computed, onMounted } from 'vue'
 import { Wifi } from '@capacitor-community/wifi';
 
 const log = ref("")
-window.addEventListener("testintent", () => {
-  console.log("testintent");
-  log.value = "testintent here"
+window.addEventListener("testintent", (value) => {
+  error.value = new Date().toISOString()
+  log.value = value.toString()
 })
 
 let nativeIPs = <string[]>[]

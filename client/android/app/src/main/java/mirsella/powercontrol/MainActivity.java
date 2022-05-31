@@ -1,11 +1,9 @@
-package com.mirsella.powercontrol;
+package mirsella.powercontrol;
 
-import com.getcapacitor.BridgeActivity;
 import android.os.Bundle;
 
 import com.getcapacitor.BridgeActivity;
 import com.getcapacitor.Plugin;
-// import com.getcapacitor.bridge;
 
 import android.content.Intent;  
 
