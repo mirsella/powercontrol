@@ -5,18 +5,25 @@ import android.os.Bundle;
 
 import com.getcapacitor.BridgeActivity;
 import com.getcapacitor.Plugin;
-import com.itmikes.capacitorintents.CapacitorIntents;
 
 public class MainActivity extends BridgeActivity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+  }
 
-    // Initializes the Bridge 
-    this.init(savedInstanceState, new ArrayList<Class<? extends Plugin>>() {{
-      // Additional plugins you've installed go here 
-      // Ex: add(TotallyAwesomePlugin.class); 
-      add(CapacitorIntents.class);
-    }});
+  @Override
+  protected void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    String action = intent.getAction();
+    String type = intent.getType();
+    if (Intent.ACTION_SEND.equals(action) && type != null) {
+      bridge.getActivity().setIntent(intent);
+      bridge.eval("window.dispatchEvent(new Event('testintent'))", new ValueCallback<String>() {
+        @Override
+        public void onReceiveValue(String s) {
+        }
+      });
+    }
   }
 }

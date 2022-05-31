@@ -2,8 +2,12 @@
 import axios from 'redaxios' 
 import { ref, computed, onMounted } from 'vue' 
 import { Wifi } from '@capacitor-community/wifi';
-import 'capacitor-intents';
-import { Plugins } from '@capacitor/core';
+
+const log = ref("")
+window.addEventListener("testintent", () => {
+  console.log("testintent");
+  log.value = "testintent here"
+})
 
 let nativeIPs = <string[]>[]
 Wifi.getAllIP()
@@ -14,18 +18,6 @@ Wifi.getAllIP()
     })
     searchIP()
   })
-
-let receiverId: string | null = null;
-
-receiverId = await Plugins.CapacitorIntents.registerBroadcastReceiver({filters: ['example.itmikes.action']}, async (data: any) => {
-  // data is a JS Object but could contain any structure
-  console.dir(data);
-  // data in this example will be {value: **JSONString of the below passed value**}
-
-  // now unregister
-  // if(receiverId !== null)
-  //   await Plugins.CapacitorIntents.unregisterBroadcastReceiver({id: receiverId});
-});
 
 const error = ref('')
 const nextboot = ref("")
@@ -213,6 +205,7 @@ function power(action: "power" | "reset" | "reboot") {
         </svg>
       </button>
     </div>
+    <h1> log: {{log}} </h1>
 
     <div class="w-screen my-5rem inline-flex justify-center items-center">
       <button :class="{ 'shadow-2xl shadow-true-gray-400' : nextboot === 'windows' }" @click="setnextboot('windows')" class="transition button mx-5rem !mobile">
