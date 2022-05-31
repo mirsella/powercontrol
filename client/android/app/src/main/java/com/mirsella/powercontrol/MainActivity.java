@@ -1,4 +1,4 @@
-package mirsella.powercontrol;
+package com.mirsella.powercontrol;
 
 import com.getcapacitor.BridgeActivity;
 import android.os.Bundle;
