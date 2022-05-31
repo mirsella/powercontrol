@@ -31,19 +31,6 @@
 
         </activity>
 
-        <!-- <activity                                                              -->
-        <!--     android:name="mirsella.powercontrol.power"                         -->
-        <!--     android:label="testing" >                                          -->
-        <!--     <intent-filter>                                                    -->
-        <!--         <action android:name="android.intent.action.VIEW" />           -->
-        <!--         <category android:name="android.intent.category.DEFAULT" />    -->
-        <!--         <category android:name="android.intent.category.BROWSABLE" />  -->
-                <!-- Accepts URIs that begin with "powercontrol://power” -->
-        <!--         <data android:scheme="powercontrol"                            -->
-        <!--               android:host="power" />                                  -->
-        <!--     </intent-filter>                                                   -->
-        <!-- </activity>                                                            -->
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
