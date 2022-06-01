@@ -27,11 +27,11 @@ public class MainActivity extends BridgeActivity {
   //   String type = intent.getType();
   //   bridge.getActivity().setIntent(intent);
   //   bridge.triggerJSEvent("testintent", "window",  scheme);
-  // bridge.triggerJSEvent("testintent", "window",  "{'data': 'test'}");
     bridge.eval("window.dispatchEvent(new Event('testintent'))", new ValueCallback<String>() {
       @Override
       public void onReceiveValue(String s) {
       }
     });
+    bridge.triggerJSEvent("testintent", "window",  "{'data': 'test'}");
     }
 }
