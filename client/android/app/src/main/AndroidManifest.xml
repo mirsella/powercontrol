@@ -25,10 +25,11 @@
             </intent-filter>
 
             <intent-filter>
-                <action android:name="mirsella.powercontrol.testintent" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="powercontrol" />
+              <!-- <action android:name="android.intent.action.VIEW" /> -->
+              <action android:name="mirsella.powercontrol.testintent" />
+              <category android:name="android.intent.category.DEFAULT" />
+              <category android:name="android.intent.category.BROWSER" />
+              <data android:scheme="powercontrol" />
             </intent-filter>
 
         </activity>

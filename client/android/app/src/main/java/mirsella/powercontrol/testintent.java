@@ -13,7 +13,7 @@ import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 
-public class MainActivity extends BridgeActivity {
+public class testintent extends BridgeActivity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -21,11 +21,11 @@ public class MainActivity extends BridgeActivity {
 
   public void onResume() {
     super.onResume();
-    // Intent intent = getIntent();
-    // String action = intent.getAction();
-    // String scheme = intent.getScheme();
-    // String type = intent.getType();
-    // bridge.getActivity().setIntent(intent);
-    bridge.triggerJSEvent("testintent", "window",  "{'data': 'onresume from MainActivity'}");
-    }
+    Intent intent = getIntent();
+    String action = intent.getAction();
+    String scheme = intent.getScheme();
+    String type = intent.getType();
+    bridge.getActivity().setIntent(intent);
+    bridge.triggerJSEvent("testintent", "window",  "{'data': 'onresume from testintent'}");
+  }
 }
