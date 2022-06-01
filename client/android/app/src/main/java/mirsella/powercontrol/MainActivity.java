@@ -2,15 +2,12 @@ package mirsella.powercontrol;
 
 import android.os.Bundle;
 import android.webkit.ValueCallback;
+import android.net.Uri;
 
 import com.getcapacitor.BridgeActivity;
 import com.getcapacitor.Plugin;
 
 import android.content.Intent;  
-
-import com.getcapacitor.Plugin;
-import com.getcapacitor.PluginCall;
-import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 
 public class MainActivity extends BridgeActivity {
@@ -21,11 +18,11 @@ public class MainActivity extends BridgeActivity {
 
   public void onResume() {
     super.onResume();
-    // Intent intent = getIntent();
-    // String action = intent.getAction();
-    // String scheme = intent.getScheme();
-    // String type = intent.getType();
-    // bridge.getActivity().setIntent(intent);
-    bridge.triggerJSEvent("testintent", "window",  "{'data': 'onresume from MainActivity'}");
+    Uri uri = bridge.getIntentUri();
+    String url = null;
+    if (uri != null) {
+      url = uri.toString();
+    }
+    bridge.triggerJSEvent("testintent", "window",  "{'data':'" + url +"'}");
     }
 }
