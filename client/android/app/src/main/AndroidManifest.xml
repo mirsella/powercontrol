@@ -22,9 +22,6 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" /> 
-                <!-- Accepts URIs that begin with "powercontrol://power” -->
-                <data android:scheme="mirsella.powercontrol"
-                  android:host="power" />
             </intent-filter>
 
         </activity>

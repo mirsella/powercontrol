@@ -2,11 +2,20 @@
 import axios from 'redaxios' 
 import { ref, computed, onMounted } from 'vue' 
 import { Wifi } from '@capacitor-community/wifi';
+import { Toast } from '@capacitor/toast';
 
+Toast.show({
+  text: "started",
+  duration: 'long'
+})
 const log = ref("")
 window.addEventListener("testintent", (value) => {
+  Toast.show({
+    text: "testintent",
+    duration: 'long'
+  })
   error.value = new Date().toISOString()
-  log.value = value.toString()
+  log.value = JSON.stringify(value)
 })
 
 let nativeIPs = <string[]>[]

@@ -6,6 +6,7 @@
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "android": "vue-tsc --noEmit && vite build && cap run android",
+    "androidgradle": "npm run build && npx cap sync android && npm run gradle",
     "gradle": "cd android && ./gradlew assembleDebug",
     "resources": "cordova-res android --skip-config --copy"
   },
@@ -14,6 +15,7 @@
     "@capacitor-community/wifi": "github:mirsella/capacitor3-wifimanager",
     "@capacitor/android": "^3.5.1",
     "@capacitor/core": "^3.5.1",
+    "@capacitor/toast": "^1.0.8",
     "@robingenz/capacitor-android-dark-mode-support": "^1.0.0",
     "redaxios": "^0.5.0",
     "vue": "^3.2.33"
