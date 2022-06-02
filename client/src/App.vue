@@ -58,7 +58,7 @@ const newIPPrompt = computed(() => {
   }
 })
 const IPregex = /^https?:\/\/[0-9a-zA-Z\.]+(:[0-9]{2,}|[\/0-9a-zA-Z]+)$/
-function newIP(e: any) {
+function newIP() {
   if (newip.value.length > 0 && newip.value.match(IPregex)) {
     Object(IPS.value).push(newip.value)
     newip.value = ''
@@ -117,10 +117,10 @@ onMounted(() => {
   SplashScreen.hide()
   searchIP()
 })
-function searchIP() {
+async function searchIP() {
   error.value = ""
   document.querySelector('#refresh')?.classList.add('animate-spin')
-  Wifi.getAllIP()
+  await Wifi.getAllIP()
     .then((e: object) => {
       const ips = Object.values(e)
       nativeIPs = ips.map((ip: string) => {
@@ -151,12 +151,11 @@ function searchIP() {
     )
   })
 
-  Promise.all([
+  await Promise.all([
     Promise.any(httpRequests),
     new Promise(resolve => setTimeout(resolve, 1000))
   ])
   .then(() => document.querySelector('#refresh')?.classList.remove('animate-spin'))
-  .catch(() => document.querySelector('#refresh')?.classList.remove('animate-spin'))
 }
 
 function setnextboot(presetName: "windows" | "linux") {
