@@ -11,9 +11,11 @@ import android.content.Intent;
 import com.getcapacitor.annotation.CapacitorPlugin;
 
 public class MainActivity extends BridgeActivity {
+  Intent intent;
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    intent = getIntent();
   }
 
   public void onResume() {
@@ -23,12 +25,10 @@ public class MainActivity extends BridgeActivity {
     if (uri != null) {
       url = uri.toString();
     }
-    // bridge.triggerJSEvent("testintent", "window",  "{'onResume':'" + url +"'}");
-    bridge.eval("window.dispatchEvent(new Event('sendIntentReceived', {'detail': 'from bridgeveal onResume'}))", new ValueCallback<String>() {
-      @Override
-      public void onReceiveValue(String s) {
-      }
-    });
+    if (url == null) {
+      url = intent.getDataString();
+    }
+    bridge.triggerJSEvent("testintent", "window",  "{'onResume':'" + url +"'}");
   }
 
   @Override
@@ -39,11 +39,6 @@ public class MainActivity extends BridgeActivity {
     if (uri != null) {
       url = uri.toString();
     }
-    // bridge.triggerJSEvent("testintent", "window",  "{'onNewIntent':'" + url +"'}");
-    bridge.eval("window.dispatchEvent(new Event('sendIntentReceived', {'detail': 'from bridgeveal onNewIntent'}))", new ValueCallback<String>() {
-      @Override
-      public void onReceiveValue(String s) {
-      }
-    });
+    bridge.triggerJSEvent("testintent", "window",  "{'onNewIntent':'" + url +"'}");
   }
 }
