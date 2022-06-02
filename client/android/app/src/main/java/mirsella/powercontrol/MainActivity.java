@@ -18,6 +18,7 @@ public class MainActivity extends BridgeActivity {
     intent = getIntent();
   }
 
+  @Override
   public void onResume() {
     super.onResume();
     Uri uri = bridge.getIntentUri();
@@ -30,6 +31,20 @@ public class MainActivity extends BridgeActivity {
     }
     bridge.triggerJSEvent("testintent", "window",  "{'onResume':'" + url +"'}");
   }
+
+  public void onStart() {
+    super.onStart();
+    Uri uri = bridge.getIntentUri();
+    String url = null;
+    if (uri != null) {
+      url = uri.toString();
+    }
+    if (url == null) {
+      url = intent.getDataString();
+    }
+    bridge.triggerJSEvent("testintent", "window",  "{'onStart':'" + url +"'}");
+  }
+
 
   @Override
   public void onNewIntent(Intent intent) {

@@ -4,14 +4,14 @@ import { ref, computed, onMounted } from 'vue'
 import { Wifi } from '@capacitor-community/wifi';
 import { Toast } from '@capacitor/toast';
 
-const log = ref("")
+const log = ref<string[]>([])
 window.addEventListener("testintent", (value) => {
   Toast.show({
     text: "testintent",
     duration: 'long'
   })
   error.value = new Date().toISOString()
-  log.value = JSON.stringify(value)
+  log.value.push(JSON.stringify(value))
 })
 
 let nativeIPs = <string[]>[]
@@ -210,7 +210,6 @@ function power(action: "power" | "reset" | "reboot") {
         </svg>
       </button>
     </div>
-    <h1> log: {{log}} </h1>
 
     <div class="w-screen my-5rem inline-flex justify-center items-center">
       <button :class="{ 'shadow-2xl shadow-true-gray-400' : nextboot === 'windows' }" @click="setnextboot('windows')" class="transition button mx-5rem !mobile">
@@ -221,6 +220,8 @@ function power(action: "power" | "reset" | "reboot") {
       </button>
     </div>
   </div>
+  
+  <h1 class="wrap w-screen"> {{log}} </h1>
 
   <div id="settings" class="dark:(bg-black text-white) h-screen pt-6rem w-screen">
     <h1 class="text-center text-3xl">Settings</h1>
