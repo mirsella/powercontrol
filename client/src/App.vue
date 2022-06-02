@@ -136,10 +136,10 @@ function searchIP() {
       })
     }
   }
-  const calls: Promise<void>[] = []
+  const httpRequests: Promise<void>[] = []
   ips.forEach((ip: string) => {
     const lip = ip
-    calls.push(
+    httpRequests.push(
       axios.get(`${lip}/`, {headers: { Authorization: `Bearer ${token.value}` }})
       .then(res => {
         if (res.status === 200 && res.data === "powercontrol") {
@@ -150,8 +150,11 @@ function searchIP() {
       })
     )
   })
-  calls.push(new Promise(resolve => setTimeout(resolve, 1000)))
-  Promise.allSettled(calls)
+
+  Promise.all([
+    Promise.any(httpRequests),
+    new Promise(resolve => setTimeout(resolve, 1000))
+  ])
   .then(() => document.querySelector('#refresh')?.classList.remove('animate-spin'))
   .catch(() => document.querySelector('#refresh')?.classList.remove('animate-spin'))
 }
@@ -257,56 +260,56 @@ function power(action: "power" | "reset" | "reboot") {
       <input class="button transition px-1rem py-2 my-2 <sm:(w-full px-1rem)" @input="importSettings" v-model="importModel" type="text" placeholder="paste settings here" name="settings" id="settings"/>
     </div>
 
-    <div class="w-screen my-1rem px-2rem">
-      <input class="button transition w-full px-1rem py-2" type="text" placeholder="token" v-model="token" @change="savelocalstorage">
-    </div>
-
-    <div class="pt-0 w-screen lg:h-2/5 h-1/3 flex flex-wrap content-start md:px-4rem <lg:justify-center overflow-y-scroll">
-      <div class="flex h-min my-3 <sm:(w-screen px-2rem)">
-        <input class="mr-2 text-white w-full px-2 transition button" type="text" @keyup.enter="newIP" :class="newIPPrompt" v-model="newip" placeholder="new IP">
-        <button class="transition button rounded-lg p-2 mx-1" @click="newIP">➕</button>
+      <div class="w-screen my-1rem px-2rem">
+        <input class="button transition w-full px-1rem py-2" type="text" placeholder="token" v-model="token" @change="savelocalstorage">
       </div>
-      <div class="flex text-center m-3 wrap h-min <sm:(mx-0 w-screen px-2rem)" v-for="(ip, index) in IPS" :key="ip">
-        <span class="w-full h-full overflow-y-scroll p-2">{{ip}}</span>
-        <button class="transition button rounded-lg p-2 mx-1" @click="IPS.splice(index, 1) && savelocalstorage()">❌</button>
-      </div>
-    </div>
 
-    <div class="w-screen inline-flex mt-1rem">
-      <div class="w-1/2 lg:(pl-2rem inline-flex) px-1rem">
-        <img class="mobile max-w-10rem mx-2rem <lg:(mb-1rem max-w-5rem)" src="./assets/windows.png" alt="windows icon">
-        <div class="lg:inline-flex h-max-13rem overflow-auto">
-          <div class="w-full inline-flex lg:(flex flex-wrap w-3rem)" v-for="(key, index) in preset.windows" :key="key">
-            <div class="lg:(h-[60%] w-full) w-2/3 m-1 button flex justify-center items-center">
-              <h6>{{ Object(presetEmoji)[key] }}</h6>
-            </div>
-            <button class="lg:(self-end h-[30%] w-full) w-1/3 h-full m-1 button transition" @click="preset.windows.splice(index, 1); savelocalstorage()">❌</button>
-          </div>
-          <div class="inline-flex w-full lg:(flex flex-wrap w-3rem)">
-            <button class="m-1 transition button w-full" @click="preset.windows.push('UP'); savelocalstorage()">{{presetEmoji.UP}}</button>
-            <button class="m-1 transition button w-full" @click="preset.windows.push('ENTER'); savelocalstorage()">{{presetEmoji.ENTER}}</button>
-            <button class="m-1 transition button w-full" @click="preset.windows.push('DOWN'); savelocalstorage()">{{presetEmoji.DOWN}}</button>
-          </div>
+      <div class="pt-0 w-screen lg:h-2/5 h-1/3 flex flex-wrap content-start md:px-4rem <lg:justify-center overflow-y-scroll">
+        <div class="flex h-min my-3 <sm:(w-screen px-2rem)">
+          <input class="mr-2 text-white w-full px-2 transition button" type="text" @keyup.enter="newIP" :class="newIPPrompt" v-model="newip" placeholder="new IP">
+          <button class="transition button rounded-lg p-2 mx-1" @click="newIP">➕</button>
+        </div>
+        <div class="flex text-center m-3 wrap h-min <sm:(mx-0 w-screen px-2rem)" v-for="(ip, index) in IPS" :key="ip">
+          <span class="w-full h-full overflow-y-scroll p-2">{{ip}}</span>
+          <button class="transition button rounded-lg p-2 mx-1" @click="IPS.splice(index, 1) && savelocalstorage()">❌</button>
         </div>
       </div>
 
-      <div class="w-1/2 lg:(pl-2rem inline-flex) px-1rem">
-        <img class="mobile max-w-12rem mx-2rem <lg:(mb-1rem max-w-5rem)" src="./assets/linux.png" alt="linux icon">
-        <div class="lg:inline-flex h-max-13rem overflow-auto">
-          <div class="w-full inline-flex lg:(flex flex-wrap w-3rem)" v-for="(key, index) in preset.linux" :key="key">
-            <div class="lg:(h-[60%] w-full) w-2/3 m-1 button flex justify-center items-center">
-              <h6>{{ Object(presetEmoji)[key] }}</h6>
+      <div class="w-screen inline-flex mt-1rem">
+        <div class="w-1/2 lg:(pl-2rem inline-flex) px-1rem">
+          <img class="mobile max-w-10rem mx-2rem <lg:(mb-1rem max-w-5rem)" src="./assets/windows.png" alt="windows icon">
+          <div class="lg:inline-flex h-max-13rem overflow-auto">
+            <div class="w-full inline-flex lg:(flex flex-wrap w-3rem)" v-for="(key, index) in preset.windows" :key="key">
+              <div class="lg:(h-[60%] w-full) w-2/3 m-1 button flex justify-center items-center">
+                <h6>{{ Object(presetEmoji)[key] }}</h6>
+              </div>
+              <button class="lg:(self-end h-[30%] w-full) w-1/3 h-full m-1 button transition" @click="preset.windows.splice(index, 1); savelocalstorage()">❌</button>
             </div>
-            <button class="lg:(self-end h-[30%] w-full) w-1/3 h-full m-1 button transition" @click="preset.linux.splice(index, 1); savelocalstorage()">❌</button>
+            <div class="inline-flex w-full lg:(flex flex-wrap w-3rem)">
+              <button class="m-1 transition button w-full" @click="preset.windows.push('UP'); savelocalstorage()">{{presetEmoji.UP}}</button>
+              <button class="m-1 transition button w-full" @click="preset.windows.push('ENTER'); savelocalstorage()">{{presetEmoji.ENTER}}</button>
+              <button class="m-1 transition button w-full" @click="preset.windows.push('DOWN'); savelocalstorage()">{{presetEmoji.DOWN}}</button>
+            </div>
           </div>
-          <div class="inline-flex w-full lg:(flex flex-wrap w-3rem)">
-            <button class="m-1 transition button w-full" @click="preset.linux.push('UP'); savelocalstorage()">{{presetEmoji.UP}}</button>
-            <button class="m-1 transition button w-full" @click="preset.linux.push('ENTER'); savelocalstorage()">{{presetEmoji.ENTER}}</button>
-            <button class="m-1 transition button w-full" @click="preset.linux.push('DOWN'); savelocalstorage()">{{presetEmoji.DOWN}}</button>
+        </div>
+
+        <div class="w-1/2 lg:(pl-2rem inline-flex) px-1rem">
+          <img class="mobile max-w-12rem mx-2rem <lg:(mb-1rem max-w-5rem)" src="./assets/linux.png" alt="linux icon">
+          <div class="lg:inline-flex h-max-13rem overflow-auto">
+            <div class="w-full inline-flex lg:(flex flex-wrap w-3rem)" v-for="(key, index) in preset.linux" :key="key">
+              <div class="lg:(h-[60%] w-full) w-2/3 m-1 button flex justify-center items-center">
+                <h6>{{ Object(presetEmoji)[key] }}</h6>
+              </div>
+              <button class="lg:(self-end h-[30%] w-full) w-1/3 h-full m-1 button transition" @click="preset.linux.splice(index, 1); savelocalstorage()">❌</button>
+            </div>
+            <div class="inline-flex w-full lg:(flex flex-wrap w-3rem)">
+              <button class="m-1 transition button w-full" @click="preset.linux.push('UP'); savelocalstorage()">{{presetEmoji.UP}}</button>
+              <button class="m-1 transition button w-full" @click="preset.linux.push('ENTER'); savelocalstorage()">{{presetEmoji.ENTER}}</button>
+              <button class="m-1 transition button w-full" @click="preset.linux.push('DOWN'); savelocalstorage()">{{presetEmoji.DOWN}}</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
   </div>
 
   <button @click="settingsClick" class="w-3rem h-3rem p-2 rounded-full bg-pink-600 right-5 bottom-5 fixed text-white">
