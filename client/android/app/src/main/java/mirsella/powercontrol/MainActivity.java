@@ -23,6 +23,27 @@ public class MainActivity extends BridgeActivity {
     if (uri != null) {
       url = uri.toString();
     }
-    bridge.triggerJSEvent("testintent", "window",  "{'data':'" + url +"'}");
+    // bridge.triggerJSEvent("testintent", "window",  "{'onResume':'" + url +"'}");
+    bridge.eval("window.dispatchEvent(new Event('sendIntentReceived', {'detail': 'from bridgeveal onResume'}))", new ValueCallback<String>() {
+      @Override
+      public void onReceiveValue(String s) {
+      }
+    });
+  }
+
+  @Override
+  public void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    Uri uri = intent.getData();
+    String url = null;
+    if (uri != null) {
+      url = uri.toString();
     }
+    // bridge.triggerJSEvent("testintent", "window",  "{'onNewIntent':'" + url +"'}");
+    bridge.eval("window.dispatchEvent(new Event('sendIntentReceived', {'detail': 'from bridgeveal onNewIntent'}))", new ValueCallback<String>() {
+      @Override
+      public void onReceiveValue(String s) {
+      }
+    });
+  }
 }
