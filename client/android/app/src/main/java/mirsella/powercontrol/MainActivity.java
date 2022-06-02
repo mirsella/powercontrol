@@ -15,28 +15,22 @@ public class MainActivity extends BridgeActivity {
     super.onCreate(savedInstanceState);
   }
 
-  // @Override
-  // public void onResume() {
-  //   super.onResume();
-  //   Uri uri = bridge.getIntentUri();
-  //   String url = null;
-  //   if (uri != null) {
-  //     url = uri.toString();
-  //   }
-  //   if (url == null) {
-  //     url = intent.getDataString();
-  //   }
-  //   bridge.triggerJSEvent("testintent", "window",  "{'onResume':'" + url +"'}");
-  // }
+  @Override
+  protected void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    setIntent(intent);
+  }
 
   @Override
-  public void onNewIntent(Intent intent) {
-    super.onNewIntent(intent);
-    Uri uri = intent.getData();
+  protected void onResume() {
+    super.onResume();
+    Uri uri = getIntent().getData();
     String url = null;
     if (uri != null) {
       url = uri.toString();
     }
-    bridge.triggerJSEvent("testintent", "window",  "{'onNewIntent':'" + url +"'}");
+    bridge.triggerJSEvent("testintent", "window",  "{'onresume':'" + url +"'}");
   }
 }
+
+
