@@ -3,6 +3,7 @@ import axios from 'redaxios'
 import { ref, computed, onMounted } from 'vue' 
 import { Wifi } from '@capacitor-community/wifi';
 import { Toast } from '@capacitor/toast';
+import { SplashScreen } from '@capacitor/splash-screen';
 
 const log = ref<string[]>([])
 window.addEventListener("testintent", (value) => {
@@ -97,7 +98,10 @@ function savelocalstorage () {
   window.localStorage.setItem("preset", JSON.stringify(preset.value))
 }
 
-onMounted(() => searchIP())
+onMounted(async () => {
+  SplashScreen.hide();
+  searchIP()
+})
 function searchIP() {
   Wifi.getAllIP()
     .then((e: object) => {
@@ -219,9 +223,8 @@ function power(action: "power" | "reset" | "reboot") {
         <img class="mobile w-auto max-w-12rem" src="./assets/linux.png" alt="linux icon">
       </button>
     </div>
+    <h1 class="overflow-ellipsis w-screen"> {{log}} </h1>
   </div>
-  
-  <h1 class="wrap w-screen"> {{log}} </h1>
 
   <div id="settings" class="dark:(bg-black text-white) h-screen pt-6rem w-screen">
     <h1 class="text-center text-3xl">Settings</h1>
