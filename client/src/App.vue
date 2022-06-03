@@ -3,7 +3,6 @@ import axios from 'redaxios'
 import { ref, computed, onMounted } from 'vue' 
 import { Wifi } from '@capacitor-community/wifi';
 import { Clipboard } from '@capacitor/clipboard';
-import { SplashScreen } from '@capacitor/splash-screen';
 
 let nativeIPs = <string[]>[]
 Wifi.getAllIP()
@@ -114,7 +113,6 @@ function importSettings() {
 }
     
 onMounted(() => {
-  SplashScreen.hide()
   searchIP()
 })
 async function searchIP() {
