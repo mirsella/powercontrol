@@ -2,15 +2,21 @@
 import axios from 'redaxios' 
 import { ref, computed, onMounted } from 'vue' 
 import { Wifi } from '@capacitor-community/wifi';
-import { Toast } from '@capacitor/toast';
 import { SplashScreen } from '@capacitor/splash-screen';
+import { registerPlugin } from '@capacitor/core';
+
+export interface getIntentPlugin{
+  echo(options: { value: string }): Promise<{ value: string }>;
+}
 
 const log = ref<string[]>([])
+
+const getIntentPlugin = registerPlugin<getIntentPlugin>('getIntentPlugin');
+getIntentPlugin.echo({ value: 'Hello' }).then(result => {
+  log.value.push(result.value)
+})
+
 window.addEventListener("testintent", (value) => {
-  Toast.show({
-    text: "testintent",
-    duration: 'long'
-  })
   error.value = new Date().toISOString()
   log.value.push(JSON.stringify(value))
 })
@@ -223,7 +229,7 @@ function power(action: "power" | "reset" | "reboot") {
         <img class="mobile w-auto max-w-12rem" src="./assets/linux.png" alt="linux icon">
       </button>
     </div>
-    <h1 class="overflow-ellipsis w-screen"> {{log}} </h1>
+    <span class="h-max overflow-scroll w-screen"> {{log}} </span>
   </div>
 
   <div id="settings" class="dark:(bg-black text-white) h-screen pt-6rem w-screen">
