@@ -17,7 +17,7 @@ public class getIntentPlugin extends Plugin {
         Intent intent = bridge.getActivity().getIntent();
         JSObject ret = new JSObject();
         ret.put("value", intent.getDataString());
-        call.resolve(intent.getDataString());
+        call.resolve(ret);
     }
 }
 
