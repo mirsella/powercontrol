@@ -5,19 +5,16 @@ import { Wifi } from '@capacitor-community/wifi';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { registerPlugin } from '@capacitor/core';
 
-export interface getIntentPlugin{
-  echo(options: { value: string }): Promise<{ value: string }>;
-}
+export interface getIntentPlugin{ url(): Promise<{ value: string }>; }
 
 const log = ref<string[]>([])
 
 const getIntentPlugin = registerPlugin<getIntentPlugin>('getIntentPlugin');
-getIntentPlugin.echo({ value: 'Hello' }).then(result => {
+getIntentPlugin.url().then(result => {
   log.value.push(result.value)
 })
 
-window.addEventListener("testintent", (value) => {
-  error.value = new Date().toISOString()
+window.addEventListener("intentUrl", (value) => {
   log.value.push(JSON.parse(JSON.stringify(value)).value)
 })
 

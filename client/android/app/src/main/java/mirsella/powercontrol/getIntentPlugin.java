@@ -13,11 +13,11 @@ import android.net.Uri;
 public class getIntentPlugin extends Plugin {
 
     @PluginMethod
-    public void echo(PluginCall call) {
+    public void url(PluginCall call) {
         Intent intent = bridge.getActivity().getIntent();
         JSObject ret = new JSObject();
         ret.put("value", intent.getDataString());
-        call.resolve(ret);
+        call.resolve(intent.getDataString());
     }
 }
 
