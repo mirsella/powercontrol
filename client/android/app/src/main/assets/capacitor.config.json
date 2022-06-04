@@ -3,9 +3,5 @@
 	"appName": "powercontrol",
 	"webDir": "dist",
 	"bundledWebRuntime": false,
-	"plugins": {
-		"SplashScreen": {
-			"launchAutoHide": true
-		}
-	}
+	"plugins": {}
 }

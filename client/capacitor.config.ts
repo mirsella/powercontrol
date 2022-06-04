@@ -4,12 +4,7 @@ const config: CapacitorConfig = {
   appId: 'mirsella.powercontrol',
   appName: 'powercontrol',
   webDir: 'dist',
-  bundledWebRuntime: false,
-  plugins: {
-    SplashScreen: {
-      launchAutoHide: true
-    }
-  }
+  bundledWebRuntime: false
 };
 
 export default config;
