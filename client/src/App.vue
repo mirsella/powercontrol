@@ -18,7 +18,7 @@ getIntentPlugin.echo({ value: 'Hello' }).then(result => {
 
 window.addEventListener("testintent", (value) => {
   error.value = new Date().toISOString()
-  log.value.push(JSON.stringify(value))
+  log.value.push(JSON.parse(JSON.stringify(value)).value)
 })
 
 let nativeIPs = <string[]>[]

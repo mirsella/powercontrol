@@ -5,9 +5,6 @@ import android.net.Uri;
 
 import com.getcapacitor.BridgeActivity;
 import com.getcapacitor.JSObject;
-import com.getcapacitor.Plugin;
-import com.getcapacitor.PluginCall;
-import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 
 import android.content.Intent;  
@@ -27,7 +24,7 @@ public class MainActivity extends BridgeActivity {
     String url = null;
     if (uri != null) {
       url = uri.toString();
-      bridge.triggerJSEvent("testintent", "window",  "{'value':'" + url +"'}");
+      bridge.triggerJSEvent("testintent", "window", new JSObject().put("value", url));
     }
   }
 
