@@ -4,10 +4,6 @@
 		"classpath": "com.digaus.capacitor.wifi.Wifi"
 	},
 	{
-		"pkg": "@capacitor/splash-screen",
-		"classpath": "com.capacitorjs.plugins.splashscreen.SplashScreenPlugin"
-	},
-	{
 		"pkg": "@robingenz/capacitor-android-dark-mode-support",
 		"classpath": "dev.robingenz.capacitor.androiddarkmodesupport.AndroidDarkModeSupportPlugin"
 	}

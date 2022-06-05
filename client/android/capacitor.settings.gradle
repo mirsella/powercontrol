@@ -5,8 +5,5 @@ project(':capacitor-android').projectDir = new File('../node_modules/@capacitor/
 include ':capacitor-community-wifi'
 project(':capacitor-community-wifi').projectDir = new File('../node_modules/@capacitor-community/wifi/android')
 
-include ':capacitor-splash-screen'
-project(':capacitor-splash-screen').projectDir = new File('../node_modules/@capacitor/splash-screen/android')
-
 include ':robingenz-capacitor-android-dark-mode-support'
 project(':robingenz-capacitor-android-dark-mode-support').projectDir = new File('../node_modules/@robingenz/capacitor-android-dark-mode-support/android')
