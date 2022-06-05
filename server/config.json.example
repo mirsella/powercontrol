@@ -1,7 +1,7 @@
 {
   "bootTime": 8000,
   "shutdownTime": 20000,
-  "boot_keypresses": ["DOWN", "ENTER"],
+  "nextboot": ["DOWN", "ENTER"],
   "pins": {
     "reset": 18,
     "power": 16

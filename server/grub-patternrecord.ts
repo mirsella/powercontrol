@@ -61,7 +61,7 @@ setInterval(() => {
       fs.writeJson('./bootpattern.json', pattern)
       console.log('timeout reached', new Date().toString())
       watching = false
-      config.getnextboot().forEach((key: string) => {
+      config.nextboot.forEach((key: string) => {
         port.write(keypresses[key])
       })
       lastWatchDate = new Date()

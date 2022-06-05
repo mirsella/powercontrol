@@ -1,34 +1,41 @@
 import fs from "fs-extra"
-import { reloadpins } from "./relay"
 
 type Pins = { reset: Number, power: Number}
 type Config = {
   bootTime: Number,
   shutdownTime: Number,
   token: String,
-  boot_keypresses: Object,
+  nextboot: Object,
   pins: Pins
 }
 const possibleKey = ["DOWN", "UP", "ENTER", "ESC"]
 
-const config = fs.readJsonSync('./config.json')
-async function writeconfig() { fs.writeJsonSync('./config.json', config); }
+const configfile = fs.readJsonSync('./config.json')
+async function writeconfig() { fs.writeJsonSync('./config.json', configfile); }
 
 if (process.argv.includes('token')) {
   console.log('generating new token')
   gentoken()
 }
-if (config.token.length === 0) {
+
+if (configfile.token.length === 0) {
   console.log('no token found in config.json, generating new token')
   gentoken()
 }
 
+function gentoken() {
+  const token = require('crypto').randomBytes(64).toString('hex')
+  configfile.token = token
+  writeconfig()
+  console.log("token =", token)
+}
+
 if (
-  typeof config.token === "string" && config.token.length > 0 &&
-  checkkeypresses(config.boot_keypresses) &&
-  checkpins(config.pins) &&
-  typeof config.bootTime === "number" && config.bootTime >= 1 &&
-  typeof config.shutdownTime === "number" && config.shutdownTime >= 1
+  typeof configfile.token === "string" && configfile.token.length > 0 &&
+  checkkeypresses(configfile.nextboot) &&
+  checkpins(configfile.pins) &&
+  typeof configfile.bootTime === "number" && configfile.bootTime >= 1 &&
+  typeof configfile.shutdownTime === "number" && configfile.shutdownTime >= 1
   ) {
     console.log('config ok')
 } else {
@@ -52,53 +59,30 @@ function checkpins (pins: Pins) {
   )
 }
 
-function gettoken() {
-  return config.token
-}
-function gentoken() {
-  const token = require('crypto').randomBytes(64).toString('hex')
-  config.token = token
-  writeconfig()
-  console.log("token =", token)
-}
-
-function getnextboot() {
-  return config.boot_keypresses
-}
-function setnextboot(keypresses: string[]) {
+configfile.setnextboot = function (keypresses: string[]) {
   const valid = checkkeypresses(keypresses)
   if (valid) {
-    config.boot_keypresses = keypresses
+    config.nextboot = keypresses
     writeconfig()
   }
   return valid
 }
 
-function getpins() {
-  return config.pins
-}
-function setpins(pins: Pins) {
+configfile.setpins = function (pins: Pins) {
   const valid = checkpins(pins)
   if (valid) {
     config.pins = pins
     writeconfig()
-    // reloadpins
   }
   return valid
 }
-function getBootTime() {
-  return config.bootTime
-}
-function getShutdownTime() {
-  return config.shutdownTime
-}
 
-export {
-  gettoken,
-  getnextboot,
-  setnextboot,
-  getpins,
-  setpins,
-  getBootTime,
-  getShutdownTime
-}
+const config = new Proxy(configfile, {
+  get(obj, prop) { return obj[prop] },
+  set(obj, prop, value) {
+    obj[prop] = value
+    return true
+  }
+})
+
+export = config

@@ -13,12 +13,12 @@ app.use(helmet())
 app.use(bearerToken())
 app.use(morgan('common'));
 
-import { gettoken } from './config'
+const config = require('./config');
 
 app.use((req, res, next) => {
   // @ts-ignore: express-bearer-token doesn't add token to Request type
   const bearertoken = req.token
-  if (bearertoken !== gettoken()) {
+  if (bearertoken !== config.token) {
     console.error('wrong token', bearertoken)
     res.statusMessage = 'token unauthorized'
     res.sendStatus(401)

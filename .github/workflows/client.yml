@@ -1,9 +1,6 @@
 name: Build Client
 
 on:
-  pull_request:
-    paths:
-      - 'client/**'  
   push:
     paths:
       - 'client/**'
@@ -11,6 +8,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    if: >-
+      ${{
+      github.event_name == 'pull_request' ||
+      (github.event_name == 'push' &&
+      github.event.pull_request.head.repo.full_name != 'mirsella/powercontrol')
+      }}
     steps:
       - name: Checkout source
         uses: actions/checkout@v2
@@ -18,7 +21,6 @@ jobs:
       - name: Setup java
         uses: actions/setup-java@v1
         with:
-          distribution: 'zulu'
           java-version: '11'
 
       - name: Setup Node.js

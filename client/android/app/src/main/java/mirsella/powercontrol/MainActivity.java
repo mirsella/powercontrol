@@ -7,7 +7,6 @@ import com.getcapacitor.BridgeActivity;
 import com.getcapacitor.annotation.CapacitorPlugin;
 
 import android.content.Intent;  
-import android.util.Log;
 
 public class MainActivity extends BridgeActivity {
   @Override

@@ -1,2 +1,4 @@
-# Vue 3 + Typescript + Vite
-and capacitor for android app :)
+# Vue 3 + Typescript + Vite + WindiCSS + Capacitor
+
+Todo:
+refactor src/App.vue in multiple files
