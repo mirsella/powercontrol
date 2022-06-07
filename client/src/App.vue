@@ -4,26 +4,8 @@ import { ref, computed, onMounted } from 'vue'
 import { Wifi } from '@capacitor-community/wifi';
 import { Clipboard } from '@capacitor/clipboard';
 import { SplashScreen } from '@capacitor/splash-screen';
-import { registerPlugin } from '@capacitor/core';
 
-import Nextboot from './components/nextboot.vue'
-
-interface getIntentPlugin{ url(): Promise<{ value: string }>; }
-const getIntentPlugin = registerPlugin<getIntentPlugin>('getIntentPlugin');
-
-function handleIntentUrl(url: string) {
-  if (["windows", "linux"].includes(url)) {
-    // @ts-ignore: we are checking that url is "windows" | "linux" already but TS seems to not detect it
-    setnextboot(url)
-  } else if (["power", "reset", "reboot"].includes(url)) {
-    // @ts-ignore: we are checking that url is "power" | "reset" | "reboot" already but TS seems to not detect it
-    power(url)
-  }
-}
-window.addEventListener("intentUrl", (value) => {
-  handleIntentUrl(JSON.parse(JSON.stringify(value)).value.split("://")[1])
-})
-
+import NextbootSettings from './components/nextbootSettings.vue'
 
 let nativeIPs = <string[]>[]
 Wifi.getAllIP()
@@ -131,9 +113,6 @@ function importSettings() {
 onMounted(() => {
   searchIP()
     .then(() => {
-      getIntentPlugin.url().then(result => {
-        handleIntentUrl(result.value.split("://")[1])
-      })
     })
   SplashScreen.hide()
 })
@@ -170,6 +149,7 @@ async function searchIP() {
       })
     )
   })
+  httpRequests.push(new Promise(resolve => setTimeout(resolve, 10000)))
   await Promise.all([
     Promise.any(httpRequests),
     new Promise(resolve => setTimeout(resolve, 1000))
@@ -295,8 +275,8 @@ function power(action: "power" | "reset" | "reboot") {
         </div>
       </div>
 
-      <Nextboot :preset="preset" os="windows" :savelocalstorage="savelocalstorage"/>
-      <Nextboot :preset="preset" os="linux" :savelocalstorage="savelocalstorage"/>
+      <NextbootSettings :preset="preset" os="windows" :savelocalstorage="savelocalstorage"/>
+      <NextbootSettings :preset="preset" os="linux" :savelocalstorage="savelocalstorage"/>
 
   </div>
 
