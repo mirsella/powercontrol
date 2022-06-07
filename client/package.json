@@ -6,6 +6,7 @@
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "android": "vue-tsc --noEmit && vite build && cap run android",
+    "androidgradle": "npm run build && npx cap sync android && npm run gradle",
     "gradle": "cd android && ./gradlew assembleDebug",
     "resources": "cordova-res android --skip-config --copy"
   },

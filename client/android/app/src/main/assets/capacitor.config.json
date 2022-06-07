@@ -2,6 +2,5 @@
 	"appId": "mirsella.powercontrol",
 	"appName": "powercontrol",
 	"webDir": "dist",
-	"bundledWebRuntime": false,
-	"plugins": {}
+	"bundledWebRuntime": false
 }

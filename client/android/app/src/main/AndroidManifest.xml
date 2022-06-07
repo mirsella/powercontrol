@@ -17,11 +17,18 @@
             android:name="mirsella.powercontrol.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBarLaunch"
-            android:launchMode="singleTask">
+            android:launchMode="singleTop">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER" /> 
+            </intent-filter>
+
+            <intent-filter>
+              <action android:name="mirsella.powercontrol" />
+              <category android:name="android.intent.category.DEFAULT" />
+              <category android:name="android.intent.category.BROWSER" />
+              <data android:scheme="powercontrol" />
             </intent-filter>
 
         </activity>
