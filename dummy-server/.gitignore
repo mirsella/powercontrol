@@ -1,6 +1,0 @@
-.env
-node_modules
-config.json
-build/
-pnpm-lock.yaml
-yarn.lock
