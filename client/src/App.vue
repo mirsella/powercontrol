@@ -5,21 +5,10 @@ import { Wifi } from '@capacitor-community/wifi';
 import { Clipboard } from '@capacitor/clipboard';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { registerPlugin } from '@capacitor/core';
+
 interface getIntentPlugin{ url(): Promise<{ value: string }>; }
-
-const log = ref<string[]>([])
-
 const getIntentPlugin = registerPlugin<getIntentPlugin>('getIntentPlugin');
-
-
-  getIntentPlugin.url().then(result => {
-    const url = result.value.split("://")[1]
-    log.value.push(url)
-    if (["power", "reset", "reboot"].includes(url)) {
-      // @ts-ignore: we are checking that url is "power" | "reset" | "reboot" already but TS seems to not detect it
-      power(url)
-    }
-  })
+const log = ref<string[]>([])
 
 window.addEventListener("intentUrl", (value) => {
   const url = JSON.parse(JSON.stringify(value)).value.split("://")[1]
@@ -181,8 +170,18 @@ async function searchIP() {
     Promise.any(httpRequests),
     new Promise(resolve => setTimeout(resolve, 1000))
   ])
-    .then(() => document.querySelector('#refresh')?.classList.remove('animate-spin'))
-    .catch(() => document.querySelector('#refresh')?.classList.remove('animate-spin'))
+  .then(() => {
+    getIntentPlugin.url().then(result => {
+      const url = result.value.split("://")[1]
+      log.value.push(url)
+      if (["power", "reset", "reboot"].includes(url)) {
+        // @ts-ignore: we are checking that url is "power" | "reset" | "reboot" already but TS seems to not detect it
+        power(url)
+      }
+    })
+    document.querySelector('#refresh')?.classList.remove('animate-spin')
+  })
+  .catch(() => document.querySelector('#refresh')?.classList.remove('animate-spin'))
 }
 
 function setnextboot(presetName: "windows" | "linux") {
