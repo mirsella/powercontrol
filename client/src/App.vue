@@ -10,14 +10,16 @@ interface getIntentPlugin{ url(): Promise<{ value: string }>; }
 const log = ref<string[]>([])
 
 const getIntentPlugin = registerPlugin<getIntentPlugin>('getIntentPlugin');
-getIntentPlugin.url().then(result => {
-  const url = result.value.split("://")[1]
-  log.value.push(url)
-  if (["power", "reset", "reboot"].includes(url)) {
-    // @ts-ignore: we are checking that url is "power" | "reset" | "reboot" already but TS seems to not detect it
-    power(url)
-  }
-})
+
+
+  getIntentPlugin.url().then(result => {
+    const url = result.value.split("://")[1]
+    log.value.push(url)
+    if (["power", "reset", "reboot"].includes(url)) {
+      // @ts-ignore: we are checking that url is "power" | "reset" | "reboot" already but TS seems to not detect it
+      power(url)
+    }
+  })
 
 window.addEventListener("intentUrl", (value) => {
   const url = JSON.parse(JSON.stringify(value)).value.split("://")[1]
@@ -163,6 +165,7 @@ async function searchIP() {
   ips.forEach((ip: string) => {
     const lip = ip
     httpRequests.push(
+      // @ts-ignore
       axios.get(`${lip}/`, {headers: { Authorization: `Bearer ${token.value}` }})
       .then(res => {
         if (res.status === 200 && res.data === "powercontrol") {
@@ -179,6 +182,7 @@ async function searchIP() {
     new Promise(resolve => setTimeout(resolve, 1000))
   ])
     .then(() => document.querySelector('#refresh')?.classList.remove('animate-spin'))
+    .catch(() => document.querySelector('#refresh')?.classList.remove('animate-spin'))
 }
 
 function setnextboot(presetName: "windows" | "linux") {
@@ -217,8 +221,8 @@ function getnextboot() {
 
 function power(action: "power" | "reset" | "reboot") {
   connected.value !== "" &&
-  axios.get(`${connected.value}/${action}`,
-    {headers: { Authorization: `Bearer ${token.value}` }})
+    axios.get(`${connected.value}/${action}`,
+      {headers: { Authorization: `Bearer ${token.value}` }})
     .then(res => {
       if (res.status === 200 && res.data === action) {
         error.value = ''
