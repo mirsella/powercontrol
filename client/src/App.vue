@@ -173,6 +173,7 @@ async function searchIP() {
       })
     )
   })
+  httpRequests.push(new Promise(resolve => setTimeout(resolve, 10000)))
   await Promise.all([
     Promise.any(httpRequests),
     new Promise(resolve => setTimeout(resolve, 1000))
