@@ -8,14 +8,18 @@ import { registerPlugin } from '@capacitor/core';
 
 interface getIntentPlugin{ url(): Promise<{ value: string }>; }
 const getIntentPlugin = registerPlugin<getIntentPlugin>('getIntentPlugin');
-const log = ref<string[]>([])
 
-window.addEventListener("intentUrl", (value) => {
-  const url = JSON.parse(JSON.stringify(value)).value.split("://")[1]
-  log.value.push(url)
-  if (["power", "reset", "reboot"].includes(url)) {
+function handleIntentUrl(url: string) {
+  if (["windows", "linux"].includes(url)) {
+    // @ts-ignore: we are checking that url is "windows" | "linux" already but TS seems to not detect it
+    setnextboot(url)
+  } else if (["power", "reset", "reboot"].includes(url)) {
+    // @ts-ignore: we are checking that url is "power" | "reset" | "reboot" already but TS seems to not detect it
     power(url)
   }
+}
+window.addEventListener("intentUrl", (value) => {
+  handleIntentUrl(JSON.parse(JSON.stringify(value)).value.split("://")[1])
 })
 
 
@@ -129,6 +133,11 @@ function importSettings() {
 
 onMounted(() => {
   searchIP()
+    .then(() => {
+      getIntentPlugin.url().then(result => {
+        handleIntentUrl(result.value.split("://")[1])
+      })
+    })
   SplashScreen.hide()
 })
 async function searchIP() {
@@ -154,7 +163,6 @@ async function searchIP() {
   ips.forEach((ip: string) => {
     const lip = ip
     httpRequests.push(
-      // @ts-ignore
       axios.get(`${lip}/`, {headers: { Authorization: `Bearer ${token.value}` }})
       .then(res => {
         if (res.status === 200 && res.data === "powercontrol") {
@@ -165,23 +173,13 @@ async function searchIP() {
       })
     )
   })
-
   await Promise.all([
     Promise.any(httpRequests),
     new Promise(resolve => setTimeout(resolve, 1000))
   ])
   .then(() => {
-    getIntentPlugin.url().then(result => {
-      const url = result.value.split("://")[1]
-      log.value.push(url)
-      if (["power", "reset", "reboot"].includes(url)) {
-        // @ts-ignore: we are checking that url is "power" | "reset" | "reboot" already but TS seems to not detect it
-        power(url)
-      }
-    })
     document.querySelector('#refresh')?.classList.remove('animate-spin')
   })
-  .catch(() => document.querySelector('#refresh')?.classList.remove('animate-spin'))
 }
 
 function setnextboot(presetName: "windows" | "linux") {
@@ -246,8 +244,6 @@ function power(action: "power" | "reset" | "reboot") {
     </button>
   </header>
 
-  <h5 v-if="error" class="text-rose-500 w-screen fixed top-4rem text-center bg-transparent">{{error}}</h5>
-
   <div id="top" class="h-screen dark:(bg-black text-white) pt-3rem ">
     <div class="w-screen my-5rem inline-flex justify-center items-center">
       <button id="reset" @click="power('reset')" class="transition button mx-5rem !mobile">
@@ -276,7 +272,7 @@ function power(action: "power" | "reset" | "reboot") {
         <img class="mobile w-auto max-w-12rem" src="./assets/linux.png" alt="linux icon">
       </button>
     </div>
-    <span class="h-max overflow-scroll w-screen"> {{log}} </span>
+    <span v-if="error" class="text-rose-500 overflow-scroll w-screen text-center bg-transparent">{{error}}</span>
   </div>
 
   <div id="settings" class="dark:(bg-black text-white) h-screen pt-6rem <sm:pt-5rem w-screen md:text-xl lg-text-3xl">
