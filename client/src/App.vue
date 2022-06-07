@@ -6,6 +6,8 @@ import { Clipboard } from '@capacitor/clipboard';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { registerPlugin } from '@capacitor/core';
 
+import Nextboot from './components/nextboot.vue'
+
 interface getIntentPlugin{ url(): Promise<{ value: string }>; }
 const getIntentPlugin = registerPlugin<getIntentPlugin>('getIntentPlugin');
 
@@ -36,11 +38,6 @@ Wifi.getAllIP()
 const error = ref("")
 const nextboot = ref("")
 const importModel = ref()
-const presetEmoji = {
-  "ENTER": "⏎",
-  "DOWN": "↓",
-  "UP": "↑",
-}
 
 const isTop = ref(true)
 const settingsClick = () => {
@@ -298,41 +295,9 @@ function power(action: "power" | "reset" | "reboot") {
         </div>
       </div>
 
-      <div class="w-screen inline-flex mt-1rem">
-        <div class="w-1/2 lg:(pl-2rem inline-flex) px-1rem">
-          <img class="mobile max-w-10rem mx-2rem <lg:(mb-1rem max-w-5rem)" src="./assets/windows.png" alt="windows icon">
-          <div class="lg:inline-flex h-max-13rem overflow-auto">
-            <div class="w-full inline-flex lg:(flex flex-wrap w-3rem)" v-for="(key, index) in preset.windows" :key="key">
-              <div class="lg:(h-[60%] w-full) w-2/3 m-1 button flex justify-center items-center">
-                <h6>{{ Object(presetEmoji)[key] }}</h6>
-              </div>
-              <button class="lg:(self-end h-[30%] w-full) w-1/3 h-full m-1 button transition" @click="preset.windows.splice(index, 1); savelocalstorage()">❌</button>
-            </div>
-            <div class="inline-flex w-full lg:(flex flex-wrap w-3rem)">
-              <button class="m-1 transition button w-full" @click="preset.windows.push('UP'); savelocalstorage()">{{presetEmoji.UP}}</button>
-              <button class="m-1 transition button w-full" @click="preset.windows.push('ENTER'); savelocalstorage()">{{presetEmoji.ENTER}}</button>
-              <button class="m-1 transition button w-full" @click="preset.windows.push('DOWN'); savelocalstorage()">{{presetEmoji.DOWN}}</button>
-            </div>
-          </div>
-        </div>
+      <Nextboot :preset="preset" os="windows" :savelocalstorage="savelocalstorage"/>
+      <Nextboot :preset="preset" os="linux" :savelocalstorage="savelocalstorage"/>
 
-        <div class="w-1/2 lg:(pl-2rem inline-flex) px-1rem">
-          <img class="mobile max-w-12rem mx-2rem <lg:(mb-1rem max-w-5rem)" src="./assets/linux.png" alt="linux icon">
-          <div class="lg:inline-flex h-max-13rem overflow-auto">
-            <div class="w-full inline-flex lg:(flex flex-wrap w-3rem)" v-for="(key, index) in preset.linux" :key="key">
-              <div class="lg:(h-[60%] w-full) w-2/3 m-1 button flex justify-center items-center">
-                <h6>{{ Object(presetEmoji)[key] }}</h6>
-              </div>
-              <button class="lg:(self-end h-[30%] w-full) w-1/3 h-full m-1 button transition" @click="preset.linux.splice(index, 1); savelocalstorage()">❌</button>
-            </div>
-            <div class="inline-flex w-full lg:(flex flex-wrap w-3rem)">
-              <button class="m-1 transition button w-full" @click="preset.linux.push('UP'); savelocalstorage()">{{presetEmoji.UP}}</button>
-              <button class="m-1 transition button w-full" @click="preset.linux.push('ENTER'); savelocalstorage()">{{presetEmoji.ENTER}}</button>
-              <button class="m-1 transition button w-full" @click="preset.linux.push('DOWN'); savelocalstorage()">{{presetEmoji.DOWN}}</button>
-            </div>
-          </div>
-        </div>
-      </div>
   </div>
 
   <button @click="settingsClick" class="w-3rem h-3rem p-2 rounded-full bg-pink-600 right-5 bottom-5 fixed text-white">
