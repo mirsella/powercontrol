@@ -12,14 +12,16 @@ function getNativeIps() {
       return ip.split('.')[2]
     })
     const ips = Array.from(IPS.value)
-    for (const [index, ip] of ips.entries()) {
-      if (ip.match(/\.XXX\./)) {
+    // for (const [index, ip] of ips.entries()) {
+    ips.forEach((value: any, index: number) => {
+      if (value.match(/\.XXX\./)) {
         ips.splice(index, 1)
         nativeIPsHost.forEach((nativeIP: string) => {
-          ips.push(ip.replace(/\.XXX\./, `.${nativeIP}.`))
+          ips.push(value.replace(/\.XXX\./, `.${nativeIP}.`))
         })
       }
-    }
+    })
+    searchIP()
   })
 }
 
