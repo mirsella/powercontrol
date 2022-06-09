@@ -3,11 +3,13 @@ import axios from 'redaxios'
 import { ref, computed, onMounted } from 'vue' 
 import { Clipboard } from '@capacitor/clipboard';
 import { SplashScreen } from '@capacitor/splash-screen';
+import { Capacitor } from '@capacitor/core';
 
 import NextbootSettings from './components/nextbootSettings.vue'
 
 import * as intents from './ts/intents'
-intents.init(power, setnextboot)
+import * as capWifi from './ts/capWifi'
+
 
 const error = ref("")
 const nextboot = ref("")
@@ -72,6 +74,9 @@ if (Object.keys(IPS).length !== 0 && typeof IPS.value !== "object") {
   window.localStorage.setItem("IPS", JSON.stringify(IPS))
 }
 
+intents.init(power, setnextboot)
+capWifi.init(searchIP, IPS)
+
 function savelocalstorage () {
   window.localStorage.setItem("token", token.value)
   window.localStorage.setItem("IPS", JSON.stringify(IPS.value))
@@ -103,18 +108,25 @@ function importSettings() {
 }
 
 onMounted(() => {
-  searchIP()
-  .then(() => {
+  if (Capacitor.isNativePlatform()) {
+    error.value += "innative"
+    capWifi.getNativeIps()
+    error.value += "after capwifi"
     intents.getIntentPluginUrl()
-  })
+    error.value += "after getIntentPluginUrl"
+  } else {
+    error.value += "in else not native"
+    searchIP()
+    intents.getIntentPluginUrl()
+  }
   SplashScreen.hide()
 })
-async function searchIP() {
-  error.value = ""
+function searchIP() {
+  // error.value = ""
   document.querySelector('#refresh')?.classList.add('animate-spin')
   const httpRequests: Promise<void>[] = []
-
   const ips = Array.from(IPS.value)
+
   ips.forEach((ip: string) => {
     const lip = ip
     httpRequests.push(
@@ -129,7 +141,7 @@ async function searchIP() {
     )
   })
   httpRequests.push(new Promise(resolve => setTimeout(resolve, 10000)))
-  await Promise.all([
+  Promise.all([
     Promise.any(httpRequests),
     new Promise(resolve => setTimeout(resolve, 1000))
   ])
@@ -228,7 +240,9 @@ function power(action: "power" | "reset" | "reboot") {
         <img class="mobile w-auto max-w-12rem" src="./assets/linux.png" alt="linux icon">
       </button>
     </div>
+    <span class="overflow-ellipsis">{{IPS}}</span>
     <span v-if="error" class="text-rose-500 overflow-scroll w-screen text-center bg-transparent">{{error}}</span>
+
   </div>
 
   <div id="settings" class="dark:(bg-black text-white) h-screen pt-6rem <sm:pt-5rem w-screen md:text-xl lg-text-3xl">

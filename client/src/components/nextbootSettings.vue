@@ -2,7 +2,7 @@
 interface Props {
   preset: { windows: string[], linux: string[]},
   os: "windows" | "linux",
-  savelocalstorage: Function
+  savelocalstorage: Function,
 }
 
 defineProps<Props>()
@@ -17,7 +17,8 @@ const presetEmoji = {
 
 <template>
   <div class="w-1/2 lg:(pl-2rem inline-flex) px-1rem">
-    <img class="mobile max-w-12rem mx-2rem <lg:(mb-1rem max-w-5rem)" :src="'/src/assets/' + os + '.png'" :alt="os">
+    <img v-if="os === 'windows'" class="mobile max-w-12rem mx-2rem <lg:(mb-1rem max-w-5rem)" src="../assets/windows.png" :alt="os">
+    <img v-else class="mobile max-w-12rem mx-2rem <lg:(mb-1rem max-w-5rem)" src="../assets/linux.png" :alt="os">
     <div class="lg:inline-flex h-max-13rem overflow-auto">
       <div class="w-full inline-flex lg:(flex flex-wrap w-3rem)" v-for="(key, index) in preset[os]" :key="key">
         <div class="lg:(h-[60%] w-full) w-2/3 m-1 button flex justify-center items-center">
