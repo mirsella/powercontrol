@@ -10,9 +10,11 @@ if [ "$new" -eq 0 ]; then
   echo "New commit, rebuilding..."
 
   cd $path/server
+  npm i
   npm run build
 
   cd $path/client
+  npm i
   npm run build
   sudo cp -r dist/* /var/www/html/powerclient
   sudo chmod -R 755 /var/www/html/powerclient
