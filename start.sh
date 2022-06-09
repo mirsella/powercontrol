@@ -4,7 +4,7 @@ path="/home/pi/powercontrol"
 log="/home/pi/powercontrol.log"
 
 cd $path
-git pull | rg 'changed'
+waitfornetwork && git pull | rg 'changed'
 new=$?
 if [ "$new" -eq 0 ]; then
   echo "New commit, rebuilding..."
