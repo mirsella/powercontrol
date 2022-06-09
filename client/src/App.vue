@@ -1,21 +1,13 @@
 <script setup lang="ts">
 import axios from 'redaxios' 
 import { ref, computed, onMounted } from 'vue' 
-import { Wifi } from '@capacitor-community/wifi';
 import { Clipboard } from '@capacitor/clipboard';
 import { SplashScreen } from '@capacitor/splash-screen';
 
 import NextbootSettings from './components/nextbootSettings.vue'
 
-let nativeIPs = <string[]>[]
-Wifi.getAllIP()
-  .then((e: object) => {
-    const ips = Object.values(e)
-    nativeIPs = ips.map((ip: string) => {
-      return ip.split('.')[2]
-    })
-    searchIP()
-  })
+import * as intents from './ts/intents'
+intents.init(power, setnextboot)
 
 const error = ref("")
 const nextboot = ref("")
@@ -112,30 +104,17 @@ function importSettings() {
 
 onMounted(() => {
   searchIP()
-    .then(() => {
-    })
+  .then(() => {
+    intents.getIntentPluginUrl()
+  })
   SplashScreen.hide()
 })
 async function searchIP() {
   error.value = ""
   document.querySelector('#refresh')?.classList.add('animate-spin')
-  await Wifi.getAllIP()
-    .then((e: object) => {
-      const ips = Object.values(e)
-      nativeIPs = ips.map((ip: string) => {
-        return ip.split('.')[2]
-      })
-    })
-  const ips = Array.from(IPS.value)
-  for (const [index, ip] of ips.entries()) {
-    if (ip.match(/\.XXX\./)) {
-      ips.splice(index, 1)
-      nativeIPs.forEach((nativeIP: string) => {
-        ips.push(ip.replace(/\.XXX\./, `.${nativeIP}.`))
-      })
-    }
-  }
   const httpRequests: Promise<void>[] = []
+
+  const ips = Array.from(IPS.value)
   ips.forEach((ip: string) => {
     const lip = ip
     httpRequests.push(

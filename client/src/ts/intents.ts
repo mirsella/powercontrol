@@ -3,6 +3,9 @@ import { registerPlugin } from '@capacitor/core';
 interface getIntentPlugin{ url(): Promise<{ value: string }>; }
 const getIntentPlugin = registerPlugin<getIntentPlugin>('getIntentPlugin');
 
+let power: Function
+let setnextboot: Function
+
 function handleIntentUrl(url: string) {
   if (["windows", "linux"].includes(url)) {
     // @ts-ignore: we are checking that url is "windows" | "linux" already but TS seems to not detect it
@@ -12,6 +15,7 @@ function handleIntentUrl(url: string) {
     power(url)
   }
 }
+
 window.addEventListener("intentUrl", (value) => {
   handleIntentUrl(JSON.parse(JSON.stringify(value)).value.split("://")[1])
 })
@@ -22,4 +26,9 @@ function getIntentPluginUrl() {
   })
 }
 
-export { getIntentPluginUrl };
+function init(Ipower: Function, Isetnextboot: Function) {
+  power = Ipower
+  setnextboot = Isetnextboot
+}
+
+export { init, getIntentPluginUrl }
