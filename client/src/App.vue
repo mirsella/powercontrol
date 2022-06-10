@@ -122,7 +122,6 @@ function searchIP() {
   error.value = ""
   document.querySelector('#refresh')?.classList.add('animate-spin')
   const httpRequests: Promise<void>[] = []
-  // const ips = Array.from(IPS.value)
 
   ips.forEach((ip: string) => {
     const lip = ip
