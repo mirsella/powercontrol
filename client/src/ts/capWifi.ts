@@ -1,33 +1,20 @@
 import { Wifi } from '@capacitor-community/wifi';
-import { Ref } from 'vue'
 
-let searchIP: Function
-let IPS: Ref
-
-function getNativeIps() {
-  Wifi.getAllIP()
-  .then((e: object) => {
-    const nativeIPs = Object.values(e)
-    const nativeIPsHost = nativeIPs.map((ip: string) => {
-      return ip.split('.')[2]
-    })
-    const ips = Array.from(IPS.value)
-    // for (const [index, ip] of ips.entries()) {
-    ips.forEach((value: any, index: number) => {
-      if (value.match(/\.XXX\./)) {
-        ips.splice(index, 1)
-        nativeIPsHost.forEach((nativeIP: string) => {
-          ips.push(value.replace(/\.XXX\./, `.${nativeIP}.`))
-        })
-      }
-    })
-    searchIP()
+export default async function getNativeIps(ips: string[]): Promise<string[]> {
+  const newNativeIPs: string[] = []
+  const ipdata = await Wifi.getAllIP()
+  const nativeIPs = Object.values(ipdata)
+  const nativeIPsHost = nativeIPs.map((ip: string) => {
+    return ip.split('.')[2]
   })
-}
 
-
-function init(IsearchIP: Function, IIPS: Ref) {
-  searchIP = IsearchIP
-  IPS = IIPS
+  for (const [ index, value ] of ips.entries()) {
+    if (value.match(/\.XXX\./)) {
+      ips.splice(index, 1)
+      nativeIPsHost.forEach((nativeIP: string) => {
+        newNativeIPs.push(value.replace(/\.XXX\./, `.${nativeIP}.`))
+      })
+    }
+  }
+  return newNativeIPs
 }
-export { init, getNativeIps }

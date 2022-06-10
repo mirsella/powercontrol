@@ -8,7 +8,7 @@ import { Capacitor } from '@capacitor/core';
 import NextbootSettings from './components/nextbootSettings.vue'
 
 import * as intents from './ts/intents'
-import * as capWifi from './ts/capWifi'
+import getNativeIps from './ts/capWifi'
 
 
 const error = ref("")
@@ -60,6 +60,7 @@ function newIP() {
 
 const token = ref(window.localStorage.getItem("token") || "")
 let IPS = ref<string[]>(JSON.parse(window.localStorage.getItem("IPS") || "[]"))
+const ips: string[] = Array.from(IPS.value)
 let preset = JSON.parse(window.localStorage.getItem("preset") || '{"windows": [], "linux": []}')
 
 if (Object.keys(preset).length !== 2 && typeof preset.windows !== "object" && typeof preset.linux !== "object") {
@@ -75,7 +76,6 @@ if (Object.keys(IPS).length !== 0 && typeof IPS.value !== "object") {
 }
 
 intents.init(power, setnextboot)
-capWifi.init(searchIP, IPS)
 
 function savelocalstorage () {
   window.localStorage.setItem("token", token.value)
@@ -107,25 +107,22 @@ function importSettings() {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
   if (Capacitor.isNativePlatform()) {
-    error.value += "innative"
-    capWifi.getNativeIps()
-    error.value += "after capwifi"
-    intents.getIntentPluginUrl()
-    error.value += "after getIntentPluginUrl"
-  } else {
-    error.value += "in else not native"
+    (await getNativeIps(ips)).forEach((ip: string) => {
+      ips.push(ip)
+    })
     searchIP()
     intents.getIntentPluginUrl()
+    SplashScreen.hide()
   }
-  SplashScreen.hide()
 })
+
 function searchIP() {
-  // error.value = ""
+  error.value = ""
   document.querySelector('#refresh')?.classList.add('animate-spin')
   const httpRequests: Promise<void>[] = []
-  const ips = Array.from(IPS.value)
+  // const ips = Array.from(IPS.value)
 
   ips.forEach((ip: string) => {
     const lip = ip
@@ -145,9 +142,9 @@ function searchIP() {
     Promise.any(httpRequests),
     new Promise(resolve => setTimeout(resolve, 1000))
   ])
-  .then(() => {
-    document.querySelector('#refresh')?.classList.remove('animate-spin')
-  })
+    .then(() => {
+      document.querySelector('#refresh')?.classList.remove('animate-spin')
+    })
 }
 
 function setnextboot(presetName: "windows" | "linux") {
@@ -240,8 +237,8 @@ function power(action: "power" | "reset" | "reboot") {
         <img class="mobile w-auto max-w-12rem" src="./assets/linux.png" alt="linux icon">
       </button>
     </div>
-    <span class="overflow-ellipsis">{{IPS}}</span>
     <span v-if="error" class="text-rose-500 overflow-scroll w-screen text-center bg-transparent">{{error}}</span>
+    <span class="overflow-ellipsis">{{ips}}</span>
 
   </div>
 
