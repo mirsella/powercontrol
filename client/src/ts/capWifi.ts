@@ -7,10 +7,8 @@ export default async function getNativeIps(ips: string[]): Promise<string[]> {
   const nativeIPsHost = nativeIPs.map((ip: string) => {
     return ip.split('.')[2]
   })
-
-  for (const [ index, value ] of ips.entries()) {
+  for (const value of ips) {
     if (value.match(/\.XXX\./)) {
-      ips.splice(index, 1)
       nativeIPsHost.forEach((nativeIP: string) => {
         newNativeIPs.push(value.replace(/\.XXX\./, `.${nativeIP}.`))
       })

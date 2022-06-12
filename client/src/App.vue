@@ -10,7 +10,6 @@ import NextbootSettings from './components/nextbootSettings.vue'
 import * as intents from './ts/intents'
 import getNativeIps from './ts/capWifi'
 
-
 const error = ref("")
 const nextboot = ref("")
 const importModel = ref()
@@ -52,7 +51,7 @@ const IPregex = /^https?:\/\/[0-9a-zA-Z\.]+(:[0-9]{2,}|[\/0-9a-zA-Z]+)$/
 function newIP() {
   if (newip.value.length > 0 && newip.value.match(IPregex)) {
     Object(IPS.value).push(newip.value)
-    newip.value = ''
+    newip.value = ""
     savelocalstorage()
     searchIP()
   }
@@ -113,31 +112,35 @@ onMounted(async () => {
       ips.push(ip)
     })
     searchIP()
-    intents.getIntentPluginUrl()
+    .then(() => {
+      intents.getIntentPluginUrl()
+    })
     SplashScreen.hide()
   }
 })
 
-function searchIP() {
-  error.value = ""
+async function searchIP() {
+  // error.value = ""
   document.querySelector('#refresh')?.classList.add('animate-spin')
   const httpRequests: Promise<void>[] = []
 
   ips.forEach((ip: string) => {
     const lip = ip
+    if (lip.match(/\.XXX\./)) { return }
+
     httpRequests.push(
       axios.get(`${lip}/`, {headers: { Authorization: `Bearer ${token.value}` }})
       .then(res => {
         if (res.status === 200 && res.data === "powercontrol") {
           connected.value = lip
-          error.value = ''
+          // error.value = ""
           getnextboot()
         }  
       })
     )
   })
   httpRequests.push(new Promise(resolve => setTimeout(resolve, 10000)))
-  Promise.all([
+  await Promise.all([
     Promise.any(httpRequests),
     new Promise(resolve => setTimeout(resolve, 1000))
   ])
@@ -154,11 +157,11 @@ function setnextboot(presetName: "windows" | "linux") {
       if (res.status === 200 && JSON.stringify(res.data) === JSON.stringify(nextpreset)) {
         nextboot.value = presetName
         savelocalstorage()
-        error.value = ''
-      } else { error.value = JSON.stringify({status: res.status, data: res.data}) }
+        // error.value = ""
+      } // else { error.value = JSON.stringify({status: res.status, data: res.data}) }
     })
     .catch(err => {
-      return error.value = err.data
+      // return error.value = err.data
     })
 }
 
@@ -167,7 +170,7 @@ function getnextboot() {
     {headers: { Authorization: `Bearer ${token.value}` }})
     .then(res => {
       if (res.status === 200) {
-        error.value = ''
+        // error.value = ""
         if (JSON.stringify(res.data) == JSON.stringify(preset.value.linux)) {
           nextboot.value = "linux"
         } else if (JSON.stringify(res.data) == JSON.stringify(preset.value.windows)) {
@@ -175,26 +178,27 @@ function getnextboot() {
         } else {
           nextboot.value = ""
         }
-      } else { error.value = JSON.stringify({status: res.status, data: res.data}) }
+      } // else { error.value = JSON.stringify({status: res.status, data: res.data}) }
     })
-    .catch(err => error.value = err.data)
+    // .catch(err => error.value = err.data)
 }
 
 function power(action: "power" | "reset" | "reboot") {
+  error.value+="inpower"+connected.value
   connected.value !== "" &&
     axios.get(`${connected.value}/${action}`,
       {headers: { Authorization: `Bearer ${token.value}` }})
     .then(res => {
       if (res.status === 200 && res.data === action) {
-        error.value = ''
+        // error.value = ""
         const el = document.querySelector(`#${action}`)
         el!.className += " duration-1000 shadow-full shadow-green-500"
         setTimeout(() => {
           el!.className = el!.className.replace(" duration-1000 shadow-full shadow-green-500", "")
         }, 1000)
-      } else { error.value = JSON.stringify({status: res.status, data: res.data}) }
+      } // else { error.value = JSON.stringify({status: res.status, data: res.data}) }
     })
-    .catch(err => error.value = err.data)
+    // .catch(err => error.value = err.data)
 }
 
 </script>
