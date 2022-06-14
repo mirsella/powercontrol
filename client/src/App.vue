@@ -282,7 +282,7 @@ function power(action: "power" | "reset" | "reboot") {
 
 <style>
 body {
-  /* overflow-y: hidden; */
+  overflow-y: hidden;
 }
-/* input, textarea, button, select, a { -webkit-tap-highlight-color: rgba(0,0,0,0); } */
+input, textarea, button, select, a { -webkit-tap-highlight-color: rgba(0,0,0,0); }
 </style>
