@@ -59,7 +59,7 @@ function newIP() {
 
 const token = ref(window.localStorage.getItem("token") || "")
 let IPS = ref<string[]>(JSON.parse(window.localStorage.getItem("IPS") || "[]"))
-const ips: string[] = Array.from(IPS.value)
+const ips: string[] = IPS.value.filter(ip => ! ip.match(/\.XXX\./))
 let preset = JSON.parse(window.localStorage.getItem("preset") || '{"windows": [], "linux": []}')
 
 if (Object.keys(preset).length !== 2 && typeof preset.windows !== "object" && typeof preset.linux !== "object") {
@@ -107,20 +107,19 @@ function importSettings() {
 }
 
 onMounted(async () => {
+  SplashScreen.hide()
   if (Capacitor.isNativePlatform()) {
-    (await getNativeIps(ips)).forEach((ip: string) => {
+    (await getNativeIps(IPS.value)).forEach((ip: string) => {
       ips.push(ip)
     })
     searchIP()
       .then(() => {
         intents.getIntentPluginUrl()
       })
-    SplashScreen.hide()
   }
 })
 
 async function searchIP() {
-  // error.value = ""
   document.querySelector('#refresh')?.classList.add('animate-spin')
   const httpRequests: Promise<void>[] = []
 
@@ -133,7 +132,7 @@ async function searchIP() {
       .then(res => {
         if (res.status === 200 && res.data === "powercontrol") {
           connected.value = lip
-          // error.value = ""
+          error.value = ""
           getnextboot()
         }  
       })
@@ -157,11 +156,11 @@ function setnextboot(presetName: "windows" | "linux") {
       if (res.status === 200 && JSON.stringify(res.data) === JSON.stringify(nextpreset)) {
         nextboot.value = presetName
         savelocalstorage()
-        // error.value = ""
+        error.value = ""
       } // else { error.value = JSON.stringify({status: res.status, data: res.data}) }
     })
     .catch(err => {
-      // return error.value = err.data
+      return error.value = err.data
     })
 }
 
@@ -170,7 +169,7 @@ function getnextboot() {
     {headers: { Authorization: `Bearer ${token.value}` }})
     .then(res => {
       if (res.status === 200) {
-        // error.value = ""
+        error.value = ""
         if (JSON.stringify(res.data) == JSON.stringify(preset.value.linux)) {
           nextboot.value = "linux"
         } else if (JSON.stringify(res.data) == JSON.stringify(preset.value.windows)) {
@@ -178,9 +177,9 @@ function getnextboot() {
         } else {
           nextboot.value = ""
         }
-      } // else { error.value = JSON.stringify({status: res.status, data: res.data}) }
+      } else { error.value = JSON.stringify({status: res.status, data: res.data}) }
     })
-  // .catch(err => error.value = err.data)
+  .catch(err => error.value = err.data)
 }
 
 function power(action: "power" | "reset" | "reboot") {
@@ -190,15 +189,15 @@ function power(action: "power" | "reset" | "reboot") {
       {headers: { Authorization: `Bearer ${token.value}` }})
     .then(res => {
       if (res.status === 200 && res.data === action) {
-        // error.value = ""
+        error.value = ""
         const el = document.querySelector(`#${action}`)
         el!.className += " duration-1000 shadow-full shadow-green-500"
         setTimeout(() => {
           el!.className = el!.className.replace(" duration-1000 shadow-full shadow-green-500", "")
         }, 1000)
-      } // else { error.value = JSON.stringify({status: res.status, data: res.data}) }
+      } else { error.value = JSON.stringify({status: res.status, data: res.data}) }
     })
-  // .catch(err => error.value = err.data)
+  .catch(err => error.value = err.data)
 }
 
 </script>
@@ -240,7 +239,7 @@ function power(action: "power" | "reset" | "reboot") {
         <img class="mobile w-auto max-w-12rem" src="./assets/linux.png" alt="linux icon">
       </button>
     </div>
-    <span v-if="error" class="text-rose-500 overflow-scroll w-screen text-center bg-transparent">{{error}}</span>
+    <span v-if="error" class="text-rose-500 overflow-ellipsis w-screen text-center bg-transparent">{{error}}</span>
     <span class="overflow-ellipsis">{{ips}}</span>
 
   </div>
