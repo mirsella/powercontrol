@@ -1,9 +1,6 @@
 name: build Server
 
 on:
-  pull_request:
-    paths:
-      - 'server/**'
   push:
     paths:
       - 'server/**'    
