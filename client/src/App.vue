@@ -112,9 +112,9 @@ onMounted(async () => {
       ips.push(ip)
     })
     searchIP()
-    .then(() => {
-      intents.getIntentPluginUrl()
-    })
+      .then(() => {
+        intents.getIntentPluginUrl()
+      })
     SplashScreen.hide()
   }
 })
@@ -180,7 +180,7 @@ function getnextboot() {
         }
       } // else { error.value = JSON.stringify({status: res.status, data: res.data}) }
     })
-    // .catch(err => error.value = err.data)
+  // .catch(err => error.value = err.data)
 }
 
 function power(action: "power" | "reset" | "reboot") {
@@ -198,7 +198,7 @@ function power(action: "power" | "reset" | "reboot") {
         }, 1000)
       } // else { error.value = JSON.stringify({status: res.status, data: res.data}) }
     })
-    // .catch(err => error.value = err.data)
+  // .catch(err => error.value = err.data)
 }
 
 </script>
@@ -257,7 +257,7 @@ function power(action: "power" | "reset" | "reboot") {
         <input class="button transition w-full px-1rem py-2" type="text" placeholder="token" v-model="token" @change="savelocalstorage">
       </div>
 
-      <div class="pt-0 w-screen lg:h-2/5 h-1/3 flex flex-wrap content-start md:px-4rem <lg:justify-center overflow-y-scroll">
+      <div class="pt-0 w-screen lg:h-2/5 h-1/3 flex flex-wrap content-start md:px-2rem <lg:justify-center overflow-y-scroll">
         <div class="flex h-min my-3 <sm:(w-screen px-2rem)">
           <input class="mr-2 text-white w-full px-2 transition button" type="text" @keyup.enter="newIP" :class="newIPPrompt" v-model="newip" placeholder="new IP">
           <button class="transition button rounded-lg p-2 mx-1" @click="newIP">➕</button>
@@ -282,7 +282,7 @@ function power(action: "power" | "reset" | "reboot") {
 
 <style>
 body {
-  overflow-y: hidden;
+  /* overflow-y: hidden; */
 }
-input, textarea, button, select, a { -webkit-tap-highlight-color: rgba(0,0,0,0); }
+/* input, textarea, button, select, a { -webkit-tap-highlight-color: rgba(0,0,0,0); } */
 </style>

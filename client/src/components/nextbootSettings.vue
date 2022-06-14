@@ -16,10 +16,12 @@ const presetEmoji = {
 </script>
 
 <template>
-  <div class="w-1/2 lg:(pl-2rem inline-flex) px-1rem">
-    <img v-if="os === 'windows'" class="mobile max-w-12rem mx-2rem <lg:(mb-1rem max-w-5rem)" src="../assets/windows.png" :alt="os">
-    <img v-else class="mobile max-w-12rem mx-2rem <lg:(mb-1rem max-w-5rem)" src="../assets/linux.png" :alt="os">
-    <div class="lg:inline-flex h-max-13rem overflow-auto">
+  <div class="w-1/2 lg:(pr-4rem inline-flex) px-1rem inline-block align-top">
+    <div class="w-full px-10 max-w-18rem <lg:(mb-1rem max-w-13rem) mx-auto">
+      <img v-if="os === 'windows'" class="max-w-full" src="../assets/windows.png" :alt="os">
+      <img v-else class="max-w-full" src="../assets/linux.png" :alt="os">
+    </div>
+    <div class="lg:inline-flex max-h-13rem max-w-20rem overflow-auto mx-auto">
       <div class="w-full inline-flex lg:(flex flex-wrap w-3rem)" v-for="(key, index) in preset[os]" :key="key">
         <div class="lg:(h-[60%] w-full) w-2/3 m-1 button flex justify-center items-center">
           <h6>{{ Object(presetEmoji)[key] }}</h6>
