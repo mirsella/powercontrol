@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import axios from 'redaxios' 
-import { ref, computed, onMounted } from 'vue' 
+import { ref, onMounted } from 'vue' 
 import { Clipboard } from '@capacitor/clipboard';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { Capacitor } from '@capacitor/core';
@@ -10,46 +10,14 @@ import SettingsToggle from './components/settingsToggle.vue'
 
 import * as intents from './ts/intents'
 import getNativeIps from './ts/capWifi'
+import { connected, connectedStyle, newip, newIP, IPS, ips, newIPPrompt } from './ts/ipUtils'
 
 const error = ref("")
 const nextboot = ref("")
 const importModel = ref()
 
 
-let connected = ref('')
-const connectedStyle = computed(() => {
-  return {
-    "header": {
-      "bg-green-400": connected.value,
-      "bg-rose-500": !connected.value
-    },
-    "button": {
-      "bg-green-500 hover:bg-green-600": connected.value,
-      "bg-rose-600 hover:bg-rose-700": !connected.value
-    }
-  }
-})
-
-let newip = ref('')
-const newIPPrompt = computed(() => {
-  return {
-    "!text-green-400": Boolean(newip.value.match(IPregex)),
-    "!text-rose-500": !newip.value.match(IPregex)
-  }
-})
-const IPregex = /^https?:\/\/[0-9a-zA-Z\.]+(:[0-9]{2,}|[\/0-9a-zA-Z]+)$/
-function newIP() {
-  if (newip.value.length > 0 && newip.value.match(IPregex)) {
-    Object(IPS.value).push(newip.value)
-    newip.value = ""
-    savelocalstorage()
-    searchIP()
-  }
-}
-
 const token = ref(window.localStorage.getItem("token") || "")
-let IPS = ref<string[]>(JSON.parse(window.localStorage.getItem("IPS") || "[]"))
-const ips: string[] = IPS.value.filter(ip => ! ip.match(/\.XXX\./))
 let preset = JSON.parse(window.localStorage.getItem("preset") || '{"windows": [], "linux": []}')
 
 if (Object.keys(preset).length !== 2 && typeof preset.windows !== "object" && typeof preset.linux !== "object") {
@@ -59,10 +27,6 @@ if (Object.keys(preset).length !== 2 && typeof preset.windows !== "object" && ty
   preset = ref(preset)
 }
 
-if (Object.keys(IPS).length !== 0 && typeof IPS.value !== "object") {
-  IPS = ref([])
-  window.localStorage.setItem("IPS", JSON.stringify(IPS))
-}
 
 intents.init(power, setnextboot)
 
