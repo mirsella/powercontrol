@@ -1,4 +1,5 @@
 import { ref, computed } from 'vue'
+import { IPS } from './localStorage'
 
 let connected = ref('')
 const connectedStyle = computed(() => {
@@ -24,14 +25,6 @@ const newIPPrompt = computed(() => {
   }
 })
 
-let IPS = ref<string[]>(JSON.parse(window.localStorage.getItem("IPS") || "[]"))
-const ips: string[] = IPS.value.filter(ip => ! ip.match(/\.XXX\./))
-
-if (Object.keys(IPS).length !== 0 && typeof IPS.value !== "object") {
-  IPS = ref([])
-  window.localStorage.setItem("IPS", JSON.stringify(IPS))
-}
-
 function newIP() {
   if (newip.value.length > 0 && newip.value.match(IPregex)) {
     Object(IPS.value).push(newip.value)
@@ -47,4 +40,4 @@ function init(Fsavelocalstorage: Function, FsearchIP: Function) {
   searchIP = FsearchIP
 }
 
-export { init, connected, connectedStyle, newip, newIP, IPS, ips, newIPPrompt }
+export { init, connected, connectedStyle, newip, newIP, IPS, newIPPrompt }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import axios from 'redaxios' 
-import { ref, onMounted } from 'vue' 
+import { ref, computed, onMounted } from 'vue' 
 import { Clipboard } from '@capacitor/clipboard';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { Capacitor } from '@capacitor/core';
@@ -10,34 +10,24 @@ import SettingsToggle from './components/settingsToggle.vue'
 
 import * as intents from './ts/intents'
 import getNativeIps from './ts/capWifi'
-import { connected, connectedStyle, newip, newIP, IPS, ips, newIPPrompt } from './ts/ipUtils'
+import { connected, connectedStyle, newip, newIP, newIPPrompt } from './ts/ipUtils'
+import { token, IPS, preset, savelocalstorage } from './ts/localStorage'
 
 const error = ref("")
 const nextboot = ref("")
 const importModel = ref()
 
-
-const token = ref(window.localStorage.getItem("token") || "")
-let preset = JSON.parse(window.localStorage.getItem("preset") || '{"windows": [], "linux": []}')
-
-if (Object.keys(preset).length !== 2 && typeof preset.windows !== "object" && typeof preset.linux !== "object") {
-  preset = ref({ "windows": [], "linux": [] })
-  window.localStorage.setItem("preset", JSON.stringify(preset))
-} else { 
-  preset = ref(preset)
-}
-
-
 intents.init(power, setnextboot)
 
-function savelocalstorage () {
-  window.localStorage.setItem("token", token.value)
-  window.localStorage.setItem("IPS", JSON.stringify(IPS.value))
-  window.localStorage.setItem("preset", JSON.stringify(preset.value))
-}
+const allIPs = computed(async () => {
+  const final = IPS.value.filter(ip => ! ip.match(/\.XXX\./))
+  final.concat(await getNativeIps(IPS.value))
+  error.value += "incomputed:"+final
+  return final
+})
 
 function copySettings() {
-  Clipboard.write({ string: JSON.stringify({token: token.value, ips: IPS.value, preset: preset.value}) })
+  Clipboard.write({ string: JSON.stringify({ ips: IPS.value, preset: preset.value, token: token.value }) })
 }
 function importSettings() {
   if (importModel.value !== "") {
@@ -63,9 +53,6 @@ function importSettings() {
 onMounted(async () => {
   SplashScreen.hide()
   if (Capacitor.isNativePlatform()) {
-    (await getNativeIps(IPS.value)).forEach((ip: string) => {
-      ips.push(ip)
-    })
     searchIP()
       .then(() => {
         intents.getIntentPluginUrl()
@@ -75,9 +62,10 @@ onMounted(async () => {
 
 async function searchIP() {
   document.querySelector('#refresh')?.classList.add('animate-spin')
-  const httpRequests: Promise<void>[] = []
+  const httpRequests: Promise<void>[] = [];
 
-  ips.forEach((ip: string) => {
+  (await allIPs.value).forEach((ip: string) => {
+    error.value += ip
     const lip = ip
     if (lip.match(/\.XXX\./)) { return }
 
@@ -194,7 +182,7 @@ function power(action: "power" | "reset" | "reboot") {
       </button>
     </div>
     <span v-if="error" class="text-rose-500 overflow-ellipsis w-screen text-center bg-transparent">{{error}}</span>
-    <span class="overflow-ellipsis">{{ips}}</span>
+    <span class="overflow-ellipsis">{{allIPs}}</span>
 
   </div>
 
