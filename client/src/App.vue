@@ -1,146 +1,40 @@
 <script setup lang="ts">
-import axios from 'redaxios' 
-import { ref, computed, onMounted } from 'vue' 
-import { Clipboard } from '@capacitor/clipboard';
+import { ref, onMounted } from 'vue' 
 import { SplashScreen } from '@capacitor/splash-screen';
 import { Capacitor } from '@capacitor/core';
 
 import NextbootSettings from './components/nextbootSettings.vue'
 import SettingsToggle from './components/settingsToggle.vue'
+import ImportSettings from './components/importSettings.vue'
 
-import * as intents from './ts/intents'
-import getNativeIps from './ts/capWifi'
-import { connected, connectedStyle, newip, newIP, newIPPrompt } from './ts/ipUtils'
+import { getIntentPluginUrl } from './ts/intents'
+import { connected, connectedStyle, newip, newIP, newIPPrompt, } from './ts/ipUtils'
 import { token, IPS, preset, savelocalstorage } from './ts/localStorage'
+import { setnextboot, power, searchIP } from './ts/utils'
 
 const error = ref("")
 const nextboot = ref("")
-const importModel = ref()
+const nextbootFn = () => nextboot
 
-intents.init(power, setnextboot)
-
-const allIPs = computed(async () => {
-  const final = IPS.value.filter(ip => ! ip.match(/\.XXX\./))
-  final.concat(await getNativeIps(IPS.value))
-  error.value += "incomputed:"+final
-  return final
-})
-
-function copySettings() {
-  Clipboard.write({ string: JSON.stringify({ ips: IPS.value, preset: preset.value, token: token.value }) })
-}
-function importSettings() {
-  if (importModel.value !== "") {
-    try {
-      const parsed = JSON.parse(importModel.value)
-      if (typeof parsed.token === "string" && typeof parsed.ips === "object" && typeof parsed.preset === "object") {
-        token.value = parsed.token
-        IPS.value = parsed.ips
-        preset.value = parsed.preset
-        searchIP()
-        savelocalstorage()
-      } else {
-        throw new Error("Invalid JSON")
-      }
-    } catch (e: any) {
-      console.log("couldn't parse ", importModel.value)
-      error.value = e
-    }
-    importModel.value = ""
+const logs = ref<string[]>([])
+function log(text: string | object) {
+  if (typeof text === "object") {
+    logs.value.push(JSON.stringify(text))
+  } else {
+    logs.value.push(text)
   }
 }
+
 
 onMounted(async () => {
   SplashScreen.hide()
-  if (Capacitor.isNativePlatform()) {
-    searchIP()
-      .then(() => {
-        intents.getIntentPluginUrl()
-      })
-  }
-})
-
-async function searchIP() {
-  document.querySelector('#refresh')?.classList.add('animate-spin')
-  const httpRequests: Promise<void>[] = [];
-
-  (await allIPs.value).forEach((ip: string) => {
-    error.value += ip
-    const lip = ip
-    if (lip.match(/\.XXX\./)) { return }
-
-    httpRequests.push(
-      axios.get(`${lip}/`, {headers: { Authorization: `Bearer ${token.value}` }})
-      .then(res => {
-        if (res.status === 200 && res.data === "powercontrol") {
-          connected.value = lip
-          error.value = ""
-          getnextboot()
-        }  
-      })
-    )
-  })
-  httpRequests.push(new Promise(resolve => setTimeout(resolve, 10000)))
-  await Promise.all([
-    Promise.any(httpRequests),
-    new Promise(resolve => setTimeout(resolve, 1000))
-  ])
+  searchIP(nextboot, log)
     .then(() => {
-      document.querySelector('#refresh')?.classList.remove('animate-spin')
+      if (Capacitor.isNativePlatform()) {
+        getIntentPluginUrl(nextboot)
+      }
     })
-}
-
-function setnextboot(presetName: "windows" | "linux") {
-  const nextpreset = preset.value[presetName]
-  axios.post(`${connected.value}/setnextboot`, nextpreset, 
-    {headers: { Authorization: `Bearer ${token.value}` }})
-    .then(res => {
-      if (res.status === 200 && JSON.stringify(res.data) === JSON.stringify(nextpreset)) {
-        nextboot.value = presetName
-        savelocalstorage()
-        error.value = ""
-      } // else { error.value = JSON.stringify({status: res.status, data: res.data}) }
-    })
-    .catch(err => {
-      return error.value = err.data
-    })
-}
-
-function getnextboot() {
-  axios.get(`${connected.value}/getnextboot`,
-    {headers: { Authorization: `Bearer ${token.value}` }})
-    .then(res => {
-      if (res.status === 200) {
-        error.value = ""
-        if (JSON.stringify(res.data) == JSON.stringify(preset.value.linux)) {
-          nextboot.value = "linux"
-        } else if (JSON.stringify(res.data) == JSON.stringify(preset.value.windows)) {
-          nextboot.value = "windows"
-        } else {
-          nextboot.value = ""
-        }
-      } else { error.value = JSON.stringify({status: res.status, data: res.data}) }
-    })
-  .catch(err => error.value = err.data)
-}
-
-function power(action: "power" | "reset" | "reboot") {
-  error.value+="inpower"+connected.value
-  connected.value !== "" &&
-    axios.get(`${connected.value}/${action}`,
-      {headers: { Authorization: `Bearer ${token.value}` }})
-    .then(res => {
-      if (res.status === 200 && res.data === action) {
-        error.value = ""
-        const el = document.querySelector(`#${action}`)
-        el!.className += " duration-1000 shadow-full shadow-green-500"
-        setTimeout(() => {
-          el!.className = el!.className.replace(" duration-1000 shadow-full shadow-green-500", "")
-        }, 1000)
-      } else { error.value = JSON.stringify({status: res.status, data: res.data}) }
-    })
-  .catch(err => error.value = err.data)
-}
+})
 
 </script>
 
@@ -148,7 +42,7 @@ function power(action: "power" | "reset" | "reboot") {
 
   <header :class="connectedStyle.header" class="inline-flex justify-center items-center fixed top-0 h-4rem w-screen text-center transition">
     <span class="mx-1rem break-words dark:text-white text-black max-w-[70%]">{{ connected ? `${connected}` : "disconnected" }}</span>
-    <button :class="connectedStyle.button" class="rounded px-6 h-3/5 transition" @click="searchIP">
+    <button :class="connectedStyle.button" class="rounded px-6 h-3/5 transition" @click="searchIP(nextbootFn(), log)">
       <svg id="refresh" class="dark:fill-white fill-black" height="24px" viewBox="0 0 24 24" width="24px" ><g><path d="M0,0h24v24H0V0z" fill="none"/></g><g><g><path d="M12,5V2L8,6l4,4V7c3.31,0,6,2.69,6,6c0,2.97-2.17,5.43-5,5.91v2.02c3.95-0.49,7-3.85,7-7.93C20,8.58,16.42,5,12,5z"/><path d="M6,13c0-1.65,0.67-3.15,1.76-4.24L6.34,7.34C4.9,8.79,4,10.79,4,13c0,4.08,3.05,7.44,7,7.93v-2.02 C8.17,18.43,6,15.97,6,13z"/></g></g></svg>
     </button>
   </header>
@@ -174,25 +68,21 @@ function power(action: "power" | "reset" | "reboot") {
     </div>
 
     <div class="w-screen my-5rem inline-flex justify-center items-center">
-      <button :class="{ 'shadow-2xl shadow-true-gray-400' : nextboot === 'windows' }" @click="setnextboot('windows')" class="transition button mx-5rem !mobile">
+      <button :class="{ 'shadow-2xl shadow-true-gray-400' : nextboot === 'windows' }" @click="setnextboot('windows', nextbootFn())" class="transition button mx-5rem !mobile">
         <img class="mobile w-auto max-w-12rem" src="./assets/windows.png" alt="windows icon">
       </button>
-      <button :class="{ 'shadow-2xl shadow-true-gray-400' : nextboot === 'linux' }" @click="setnextboot('linux')" class="transition button mx-5rem !mobile">
+      <button :class="{ 'shadow-2xl shadow-true-gray-400' : nextboot === 'linux' }" @click="setnextboot('linux', nextbootFn())" class="transition button mx-5rem !mobile">
         <img class="mobile w-auto max-w-12rem" src="./assets/linux.png" alt="linux icon">
       </button>
     </div>
     <span v-if="error" class="text-rose-500 overflow-ellipsis w-screen text-center bg-transparent">{{error}}</span>
-    <span class="overflow-ellipsis">{{allIPs}}</span>
+    <h1 class="overflow-scroll w-screen text-center">{{logs}}</h1>
 
   </div>
 
   <div id="settings" class="dark:(bg-black text-white) h-screen pt-6rem <sm:pt-5rem w-screen md:text-xl lg-text-3xl">
 
-    <div class="text-center px-2rem">
-      <span class="text-3xl mx-5">Settings</span>
-      <button @click="copySettings" class="button transition px-1rem py-2 my-2 md:m-2rem">📋export</button>
-      <input class="button transition px-1rem py-2 my-2 <sm:(w-full px-1rem)" @input="importSettings" v-model="importModel" type="text" placeholder="paste settings here" name="settings" id="settings"/>
-    </div>
+    <ImportSettings :nextboot="nextbootFn" />
 
       <div class="w-screen my-1rem px-2rem">
         <input class="button transition w-full px-1rem py-2" type="text" placeholder="token" v-model="token" @change="savelocalstorage">
