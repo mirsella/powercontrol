@@ -1,5 +1,7 @@
 import { ref } from 'vue'
 
+// todo: proxy so we don't have to use savelocalstorage()
+
 const token = ref(window.localStorage.getItem("token") || "")
 let preset = JSON.parse(window.localStorage.getItem("preset") || '{"windows": [], "linux": []}')
 
