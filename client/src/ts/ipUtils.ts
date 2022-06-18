@@ -1,7 +1,6 @@
-import { ref, Ref, computed } from 'vue'
-import localStorage from './localStorage'
+import { ref, computed } from 'vue'
+import { IPS } from './localStorage'
 import getNativeIps from './capWifi'
-import { searchIP } from './utils'
 
 let connected = ref('')
 const connectedStyle = computed(() => {
@@ -27,20 +26,27 @@ const newIPPrompt = computed(() => {
   }
 })
 
-function newIP(nextboot: Ref) {
+function newIP() {
   if (newip.value.length > 0 && newip.value.match(IPregex)) {
-    localStorage.IPS = [...localStorage.IPS, newip.value]
-    // localStorage.IPS.push(newip.value)
+    Object(IPS.value).push(newip.value)
     newip.value = ""
-    searchIP(nextboot, () => {})
+    savelocalstorage()
+    searchIP()
   }
 }
 
 async function getAllIPs() {
-  const ips = Array.from(localStorage.IPS.filter(ip => ! ip.match(/\.XXX\./)))
-  const nativeIPs = await getNativeIps(localStorage.IPS)
+  const ips = Array.from(IPS.value.filter(ip => ! ip.match(/\.XXX\./)))
+  const nativeIPs = await getNativeIps(IPS.value)
   nativeIPs.forEach(ip => ips.push(ip))
   return ips
 }
 
-export { connected, connectedStyle, newip, newIP, newIPPrompt, getAllIPs }
+let savelocalstorage: Function
+let searchIP: Function
+function init(Fsavelocalstorage: Function, FsearchIP: Function) {
+  savelocalstorage = Fsavelocalstorage
+  searchIP = FsearchIP
+}
+
+export { init, connected, connectedStyle, newip, newIP, IPS, newIPPrompt, getAllIPs }

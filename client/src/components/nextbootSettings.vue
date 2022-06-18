@@ -1,7 +1,8 @@
 <script setup lang="ts">
 interface Props {
   preset: { windows: string[], linux: string[]},
-  os: "windows" | "linux"
+  os: "windows" | "linux",
+  savelocalstorage: Function,
 }
 
 defineProps<Props>()
@@ -25,12 +26,12 @@ const presetEmoji = {
         <div class="lg:(h-[60%] w-full) w-2/3 m-1 button flex justify-center items-center">
           <h6>{{ Object(presetEmoji)[key] }}</h6>
         </div>
-        <button class="lg:(self-end h-[30%] w-full) w-1/3 h-full m-1 button transition" @click="preset[os].splice(index, 1)">❌</button>
+        <button class="lg:(self-end h-[30%] w-full) w-1/3 h-full m-1 button transition" @click="preset[os].splice(index, 1); savelocalstorage()">❌</button>
       </div>
       <div class="inline-flex w-full lg:(flex flex-wrap w-3rem)">
-        <button class="m-1 transition button w-full" @click="preset[os] = [...preset[os], 'UP']">{{presetEmoji.UP}}</button>
-        <button class="m-1 transition button w-full" @click="preset[os] = [...preset[os], 'ENTER']">{{presetEmoji.ENTER}}</button>
-        <button class="m-1 transition button w-full" @click="preset[os] = [...preset[os], 'DOWN']">{{presetEmoji.DOWN}}</button>
+        <button class="m-1 transition button w-full" @click="preset[os].push('UP'); savelocalstorage()">{{presetEmoji.UP}}</button>
+        <button class="m-1 transition button w-full" @click="preset[os].push('ENTER'); savelocalstorage()">{{presetEmoji.ENTER}}</button>
+        <button class="m-1 transition button w-full" @click="preset[os].push('DOWN'); savelocalstorage()">{{presetEmoji.DOWN}}</button>
       </div>
     </div>
   </div>
