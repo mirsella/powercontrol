@@ -76,7 +76,7 @@ onMounted(async () => {
       </button>
     </div>
     <span v-if="error" class="text-rose-500 overflow-ellipsis w-screen text-center bg-transparent">{{error}}</span>
-    <h1 class="overflow-scroll w-screen text-center">{{logs}}</h1>
+    <h1 class="overflow-scroll w-screen">{{logs}}</h1>
 
   </div>
 
