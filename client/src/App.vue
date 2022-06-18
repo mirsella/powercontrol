@@ -12,6 +12,9 @@ import { connected, connectedStyle, newip, newIP, newIPPrompt, } from './ts/ipUt
 import localStorage from './ts/localStorage'
 import { setnextboot, power, searchIP } from './ts/utils'
 
+console.log(localStorage.token, localStorage.preset, localStorage.IPS)
+
+
 const error = ref("")
 const nextboot = ref("")
 const nextbootFn = () => nextboot

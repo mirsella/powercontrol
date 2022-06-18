@@ -29,7 +29,8 @@ const newIPPrompt = computed(() => {
 
 function newIP(nextboot: Ref) {
   if (newip.value.length > 0 && newip.value.match(IPregex)) {
-    Object(localStorage.IPS).push(newip.value)
+    localStorage.IPS = [...localStorage.IPS, newip.value]
+    // localStorage.IPS.push(newip.value)
     newip.value = ""
     searchIP(nextboot, () => {})
   }
