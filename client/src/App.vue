@@ -9,7 +9,7 @@ import ImportSettings from './components/importSettings.vue'
 
 import { getIntentPluginUrl } from './ts/intents'
 import { connected, connectedStyle, newip, newIP, newIPPrompt, } from './ts/ipUtils'
-import { token, IPS, preset, savelocalstorage } from './ts/localStorage'
+import localStorage from './ts/localStorage'
 import { setnextboot, power, searchIP } from './ts/utils'
 
 const error = ref("")
@@ -76,31 +76,31 @@ onMounted(async () => {
       </button>
     </div>
     <span v-if="error" class="text-rose-500 overflow-ellipsis w-screen text-center bg-transparent">{{error}}</span>
-    <h1 class="overflow-scroll w-screen text-center">{{logs}}</h1>
+    <h1 class="overflow-scroll w-screen">{{logs}}</h1>
 
   </div>
 
   <div id="settings" class="dark:(bg-black text-white) h-screen pt-6rem <sm:pt-5rem w-screen md:text-xl lg-text-3xl">
 
-    <ImportSettings :nextboot="nextbootFn" />
+    <ImportSettings :nextboot="nextbootFn()" />
 
       <div class="w-screen my-1rem px-2rem">
-        <input class="button transition w-full px-1rem py-2" type="text" placeholder="token" v-model="token" @change="savelocalstorage">
+        <input class="button transition w-full px-1rem py-2" type="text" placeholder="token" v-model="localStorage.token">
       </div>
 
       <div class="pt-0 w-screen lg:h-2/5 h-1/3 flex flex-wrap content-start md:px-2rem <lg:justify-center overflow-y-scroll">
         <div class="flex h-min my-3 <sm:(w-screen px-2rem)">
-          <input class="mr-2 text-white w-full px-2 transition button" type="text" @keyup.enter="newIP" :class="newIPPrompt" v-model="newip" placeholder="new IP">
-          <button class="transition button rounded-lg p-2 mx-1" @click="newIP">➕</button>
+          <input class="mr-2 text-white w-full px-2 transition button" type="text" @keyup.enter="newIP(nextbootFn())" :class="newIPPrompt" v-model="newip" placeholder="new IP">
+          <button class="transition button rounded-lg p-2 mx-1" @click="newIP(nextbootFn())">➕</button>
         </div>
-        <div class="flex text-center m-3 wrap h-min <sm:(mx-0 w-screen px-2rem)" v-for="(ip, index) in IPS" :key="ip">
+        <div class="flex text-center m-3 wrap h-min <sm:(mx-0 w-screen px-2rem)" v-for="(ip, index) in localStorage.IPS" :key="ip">
           <span class="w-full h-full overflow-y-scroll p-2">{{ip}}</span>
-          <button class="transition button rounded-lg p-2 mx-1" @click="IPS.splice(index, 1) && savelocalstorage()">❌</button>
+          <button class="transition button rounded-lg p-2 mx-1" @click="localStorage.IPS.splice(index, 1)">❌</button>
         </div>
       </div>
 
-      <NextbootSettings :preset="preset" os="windows" :savelocalstorage="savelocalstorage"/>
-      <NextbootSettings :preset="preset" os="linux" :savelocalstorage="savelocalstorage"/>
+      <NextbootSettings :preset="localStorage.preset" os="windows"/>
+      <NextbootSettings :preset="localStorage.preset" os="linux"/>
 
       <SettingsToggle/>
   </div>

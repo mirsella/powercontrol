@@ -1,6 +1,6 @@
 import { connected, getAllIPs } from './ipUtils'
 import { Ref } from 'vue'
-import { token, preset, savelocalstorage } from './localStorage'
+import localStorage from './localStorage'
 import axios from 'redaxios' 
 
 async function searchIP(nextboot: Ref, log: Function) {
@@ -15,7 +15,7 @@ async function searchIP(nextboot: Ref, log: Function) {
     // if (lip.match(/\.XXX\./)) { return }
 
     httpRequests.push(
-      axios.get(`${lip}/`, {headers: { Authorization: `Bearer ${token.value}` }})
+      axios.get(`${lip}/`, {headers: { Authorization: `Bearer ${localStorage.token}` }})
       .then(res => {
         if (res.status === 200 && res.data === "powercontrol") {
           connected.value = lip
@@ -36,13 +36,12 @@ async function searchIP(nextboot: Ref, log: Function) {
 }
 
 function setnextboot(presetName: "windows" | "linux", nextboot: Ref) {
-  const nextpreset = preset.value[presetName]
+  const nextpreset = localStorage.preset[presetName]
   axios.post(`${connected.value}/setnextboot`, nextpreset, 
-             {headers: { Authorization: `Bearer ${token.value}` }})
+             {headers: { Authorization: `Bearer ${localStorage.token}` }})
              .then(res => {
                if (res.status === 200 && JSON.stringify(res.data) === JSON.stringify(nextpreset)) {
                  nextboot.value = presetName
-                 savelocalstorage()
                  // error.value = ""
                } // else { error.value = JSON.stringify({status: res.status, data: res.data}) }
              })
@@ -53,13 +52,13 @@ function setnextboot(presetName: "windows" | "linux", nextboot: Ref) {
 
 function getnextboot(nextboot: Ref) {
   axios.get(`${connected.value}/getnextboot`,
-            {headers: { Authorization: `Bearer ${token.value}` }})
+            {headers: { Authorization: `Bearer ${localStorage.token}` }})
             .then(res => {
               if (res.status === 200) {
                 // error.value = ""
-                if (JSON.stringify(res.data) == JSON.stringify(preset.value.linux)) {
+                if (JSON.stringify(res.data) == JSON.stringify(localStorage.preset.linux)) {
                   nextboot.value = "linux"
-                } else if (JSON.stringify(res.data) == JSON.stringify(preset.value.windows)) {
+                } else if (JSON.stringify(res.data) == JSON.stringify(localStorage.preset.windows)) {
                   nextboot.value = "windows"
                 } else {
                   nextboot.value = ""
@@ -72,7 +71,7 @@ function getnextboot(nextboot: Ref) {
 function power(action: "power" | "reset" | "reboot") {
   connected.value !== "" &&
     axios.get(`${connected.value}/${action}`,
-              {headers: { Authorization: `Bearer ${token.value}` }})
+              {headers: { Authorization: `Bearer ${localStorage.token}` }})
               .then(res => {
                 if (res.status === 200 && res.data === action) {
                   // error.value = ""
