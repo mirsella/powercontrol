@@ -8,10 +8,10 @@ const getIntentPlugin = registerPlugin<getIntentPlugin>('getIntentPlugin');
 function handleIntentUrl(url: string) {
   if (["windows", "linux"].includes(url)) {
     // @ts-ignore: we are checking that url is "windows" | "linux" already but TS seems to not detect it
-    setnextboot(url, nextboot)
+    setnextboot(url, nextboot, error)
   } else if (["power", "reset", "reboot"].includes(url)) {
     // @ts-ignore: we are checking that url is "power" | "reset" | "reboot" already but TS seems to not detect it
-    power(url)
+    power(url, error)
   }
 }
 
@@ -20,8 +20,10 @@ window.addEventListener("intentUrl", (value) => {
 })
 
 let nextboot: Ref
-function getIntentPluginUrl(nextbootR: Ref) {
+let error: Ref
+function getIntentPluginUrl(nextbootR: Ref, errorR: Ref) {
   nextboot = nextbootR
+  error = errorR
   getIntentPlugin.url().then(result => {
     handleIntentUrl(result.value.split("://")[1])
   })

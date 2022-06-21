@@ -4,7 +4,7 @@ import { token, IPS, preset, savelocalstorage } from '../ts/localStorage'
 import { ref, Ref } from 'vue'
 import { searchIP } from '../ts/utils'
 
-const props = defineProps<{ nextboot: Ref }>()
+const props = defineProps<{ nextboot: Ref, error: Ref }>()
 
 const importModel = ref()
 
@@ -20,14 +20,14 @@ function importSettings() {
         token.value = parsed.token
         IPS.value = parsed.ips
         preset.value = parsed.preset
-        searchIP(props.nextboot)
+        searchIP(props.nextboot, props.error)
         savelocalstorage()
       } else {
         throw new Error("Invalid JSON")
       }
     } catch (e: any) {
       console.log("couldn't parse ", importModel.value)
-      // error.value = e
+      props.error.value = e
     }
     importModel.value = ""
   }
@@ -37,7 +37,7 @@ function importSettings() {
 <template>
   <div class="text-center px-2rem">
     <span class="text-3xl mx-5">Settings</span>
-    <button @click="copySettings" class="button transition px-1rem py-2 my-2 md:m-2rem">📋export</button>
+    <button @click="copySettings" class="button transition px-1rem py-2 m-2 md:m-2rem">📋export</button>
     <input class="button transition px-1rem py-2 my-2 <sm:(w-full px-1rem)" @input="importSettings" v-model="importModel" type="text" placeholder="paste settings here" name="settings" id="settings"/>
   </div>
 </template>
