@@ -1,8 +1,7 @@
 <script setup lang="ts">
+import { preset, savelocalstorage } from '../ts/localStorage'
 interface Props {
-  preset: { windows: string[], linux: string[]},
-  os: "windows" | "linux",
-  savelocalstorage: Function,
+  os: "windows" | "linux"
 }
 
 defineProps<Props>()

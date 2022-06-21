@@ -3,13 +3,11 @@ import { Ref } from 'vue'
 import { token, preset, savelocalstorage } from './localStorage'
 import axios from 'redaxios' 
 
-async function searchIP(nextboot: Ref, log: Function) {
+async function searchIP(nextboot: Ref) {
   document.querySelector('#refresh')?.classList.add('animate-spin')
   const httpRequests: Promise<void>[] = [];
 
   const ips = await getAllIPs()
-  log(ips)
-
   ips.forEach((ip: string) => {
     const lip = ip
     // if (lip.match(/\.XXX\./)) { return }

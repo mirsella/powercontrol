@@ -20,7 +20,7 @@ function importSettings() {
         token.value = parsed.token
         IPS.value = parsed.ips
         preset.value = parsed.preset
-        searchIP(props.nextboot, () => {})
+        searchIP(props.nextboot)
         savelocalstorage()
       } else {
         throw new Error("Invalid JSON")

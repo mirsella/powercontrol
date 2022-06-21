@@ -1,22 +1,36 @@
-import { ref } from 'vue'
+import { ref, Ref } from 'vue'
 
-// todo: proxy so we don't have to use savelocalstorage()
-
-const token = ref(window.localStorage.getItem("token") || "")
-let preset = JSON.parse(window.localStorage.getItem("preset") || '{"windows": [], "linux": []}')
-
-if (Object.keys(preset).length !== 2 && typeof preset.windows !== "object" && typeof preset.linux !== "object") {
-  preset = ref({ "windows": [], "linux": [] })
-  window.localStorage.setItem("preset", JSON.stringify(preset))
-} else { 
-  preset = ref(preset)
+let token = ref("")
+try {
+  token.value = window.localStorage.getItem("token") || ""
+  if (token.value.length === 0) {
+    throw new Error("invalid token")
+  }
+} catch(e) {
+  token = ref("")
 }
 
 
-let IPS = ref<string[]>(JSON.parse(window.localStorage.getItem("IPS") || "[]"))
-if (Object.keys(IPS).length !== 0 && typeof IPS.value !== "object") {
-  IPS = ref([])
-  window.localStorage.setItem("IPS", JSON.stringify(IPS))
+type preset = { windows: string[], linux: string[] }
+let preset: Ref<preset> = ref({ windows: [], linux: [] })
+try {
+  preset.value = JSON.parse(window.localStorage.getItem("preset") || '{"windows": [], "linux": []}')
+  if (Object.keys(preset).length !== 2 && typeof preset.value.windows !== "object" && typeof preset.value.linux !== "object") {
+    throw new Error("Invalid preset")
+  }
+} catch (e) {
+  preset.value = { windows: [], linux: [] }
+}
+
+
+let IPS = ref<string[]>([])
+try {
+  IPS.value = JSON.parse(window.localStorage.getItem("IPS") || "[]")
+  if (Object.keys(IPS).length !== 0 && typeof IPS !== "object") {
+    throw new Error("Invalid IPS")
+  }
+} catch (e) {
+  IPS.value = []
 }
 
 function savelocalstorage () {
