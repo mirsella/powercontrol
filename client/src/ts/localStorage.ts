@@ -1,5 +1,7 @@
 import { computed } from 'vue'
 
+// TODO: use ref for computed init
+
 let token = ""
 const tokenComp = computed({
   get: () => {
