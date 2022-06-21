@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Clipboard } from '@capacitor/clipboard';
-import { token, IPS, preset, savelocalstorage } from '../ts/localStorage'
+import { tokenComp,  IPSComp, presetComp } from '../ts/localStorage'
 import { ref, Ref } from 'vue'
 import { searchIP } from '../ts/utils'
 
@@ -9,7 +9,7 @@ const props = defineProps<{ nextboot: Ref }>()
 const importModel = ref()
 
 function copySettings() {
-  Clipboard.write({ string: JSON.stringify({ ips: IPS.value, preset: preset.value, token: token.value }) })
+  Clipboard.write({ string: JSON.stringify({ ips:  IPSComp.value, preset: presetComp.value, token: tokenComp.value }) })
 }
 
 function importSettings() {
@@ -17,11 +17,10 @@ function importSettings() {
     try {
       const parsed = JSON.parse(importModel.value)
       if (typeof parsed.token === "string" && typeof parsed.ips === "object" && typeof parsed.preset === "object") {
-        token.value = parsed.token
-        IPS.value = parsed.ips
-        preset.value = parsed.preset
+        tokenComp.value = parsed.token
+        IPSComp.value = parsed.ips
+        presetComp.value = parsed.preset
         searchIP(props.nextboot, () => {})
-        savelocalstorage()
       } else {
         throw new Error("Invalid JSON")
       }

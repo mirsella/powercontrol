@@ -27,4 +27,4 @@ function getIntentPluginUrl(nextbootR: Ref) {
   })
 }
 
-export { getIntentPluginUrl }
+export default getIntentPluginUrl
