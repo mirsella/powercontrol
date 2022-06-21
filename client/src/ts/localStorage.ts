@@ -1,64 +1,59 @@
-import { computed } from 'vue'
+import { ref, Ref, computed } from 'vue'
 
 // TODO: use ref for computed init
 
-let token = ""
+let token = ref("")
+try {
+  token.value = window.localStorage.getItem("token") || ""
+  if (token.value.length === 0) {
+    throw new Error("invalid token")
+  }
+} catch(e) {
+  token = ref("")
+}
+
 const tokenComp = computed({
-  get: () => {
-    try {
-      token = window.localStorage.getItem("token") || ""
-      if (token.length === 0) {
-        throw new Error("invalid token")
-      }
-    } catch(e) {
-      token = ""
-    }
-    return token
-  },
+  get: () => token.value,
   set: (value: string) => {
-    token = value
-    window.localStorage.setItem("token", token)
+    token.value = value
+    window.localStorage.setItem("token", token.value)
   }
 })
 
 
 type preset = { windows: string[], linux: string[] }
-let preset: preset
+let preset: Ref<preset> = ref({ windows: [], linux: [] })
+try {
+  preset.value = JSON.parse(window.localStorage.getItem("preset") || '{"windows": [], "linux": []}')
+  if (Object.keys(preset).length !== 2 && typeof preset.value.windows !== "object" && typeof preset.value.linux !== "object") {
+    throw new Error("Invalid preset")
+  }
+} catch (e) {
+  preset.value = { windows: [], linux: [] }
+}
 let presetComp = computed({
-  get: () => {
-    try {
-      preset = JSON.parse(window.localStorage.getItem("preset") || '{"windows": [], "linux": []}')
-      if (Object.keys(preset).length !== 2 && typeof preset.windows !== "object" && typeof preset.linux !== "object") {
-        throw new Error("Invalid preset")
-      }
-    } catch (e) {
-      preset = { windows: [], linux: [] }
-    }
-    return preset
-  },
+  get: () => preset.value,
   set: (value: preset) => {
-    preset = value
-    window.localStorage.setItem("preset", JSON.stringify(preset))
+    preset.value = value
+    window.localStorage.setItem("preset", JSON.stringify(preset.value))
   }
 })
 
 
-let IPS: string[] = []
-
+let IPS = ref<string[]>([])
+try {
+  IPS.value = JSON.parse(window.localStorage.getItem("IPS") || "[]")
+  if (Object.keys(IPS).length !== 0 && typeof IPS !== "object") {
+    throw new Error("Invalid IPS")
+  }
+} catch (e) {
+  IPS.value = []
+}
 let IPSComp = computed({
-  get: () => {
-    try {
-      IPS = JSON.parse(window.localStorage.getItem("IPS") || "[]")
-      if (Object.keys(IPS).length !== 0 && typeof IPS !== "object") {
-        throw new Error("Invalid IPS")
-      }
-    } catch (e) {
-      IPS = []
-    }
-    return IPS
-  },
+  get: () => IPS.value,
   set: (value: string[]) => {
-    IPS = value
+    IPS.value = value
+    console.log("IPS set", value)
     window.localStorage.setItem("IPS", JSON.stringify(IPS))
   }
 })

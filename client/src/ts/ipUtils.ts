@@ -29,14 +29,15 @@ const newIPPrompt = computed(() => {
 
 function newIP() {
   if (newip.value.length > 0 && newip.value.match(IPregex)) {
-    Object(IPSComp.value).push(newip.value)
+    // Object(IPSComp.value).push(newip.value)
+    IPSComp.value = [...IPSComp.value, newip.value]
     newip.value = ""
     searchIP(ref(""), () => {})
   }
 }
 
 async function getAllIPs() {
-  const ips = Array.from(IPSComp.value.filter(ip => ! ip.match(/\.XXX\./)))
+  const ips = Array.from(Object(IPSComp).filter((ip: string) => ! ip.match(/\.XXX\./)))
   const nativeIPs = await getNativeIps(IPSComp.value)
   nativeIPs.forEach(ip => ips.push(ip))
   return ips
