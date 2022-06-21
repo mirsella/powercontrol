@@ -1,61 +1,28 @@
-import { ref, Ref, computed } from 'vue'
+import { ref } from 'vue'
 
-// TODO: use ref for computed init
+// todo: proxy so we don't have to use savelocalstorage()
 
-let token = ref("")
-try {
-  token.value = window.localStorage.getItem("token") || ""
-  if (token.value.length === 0) {
-    throw new Error("invalid token")
-  }
-} catch(e) {
-  token = ref("")
+const token = ref(window.localStorage.getItem("token") || "")
+let preset = JSON.parse(window.localStorage.getItem("preset") || '{"windows": [], "linux": []}')
+
+if (Object.keys(preset).length !== 2 && typeof preset.windows !== "object" && typeof preset.linux !== "object") {
+  preset = ref({ "windows": [], "linux": [] })
+  window.localStorage.setItem("preset", JSON.stringify(preset))
+} else { 
+  preset = ref(preset)
 }
 
-const tokenComp = computed({
-  get: () => token.value,
-  set: (value: string) => {
-    token.value = value
-    window.localStorage.setItem("token", token.value)
-  }
-})
 
-
-type preset = { windows: string[], linux: string[] }
-let preset: Ref<preset> = ref({ windows: [], linux: [] })
-try {
-  preset.value = JSON.parse(window.localStorage.getItem("preset") || '{"windows": [], "linux": []}')
-  if (Object.keys(preset).length !== 2 && typeof preset.value.windows !== "object" && typeof preset.value.linux !== "object") {
-    throw new Error("Invalid preset")
-  }
-} catch (e) {
-  preset.value = { windows: [], linux: [] }
+let IPS = ref<string[]>(JSON.parse(window.localStorage.getItem("IPS") || "[]"))
+if (Object.keys(IPS).length !== 0 && typeof IPS.value !== "object") {
+  IPS = ref([])
+  window.localStorage.setItem("IPS", JSON.stringify(IPS))
 }
-let presetComp = computed({
-  get: () => preset.value,
-  set: (value: preset) => {
-    preset.value = value
-    window.localStorage.setItem("preset", JSON.stringify(preset.value))
-  }
-})
 
-
-let IPS = ref<string[]>([])
-try {
-  IPS.value = JSON.parse(window.localStorage.getItem("IPS") || "[]")
-  if (Object.keys(IPS).length !== 0 && typeof IPS !== "object") {
-    throw new Error("Invalid IPS")
-  }
-} catch (e) {
-  IPS.value = []
+function savelocalstorage () {
+  window.localStorage.setItem("token", token.value)
+  window.localStorage.setItem("IPS", JSON.stringify(IPS.value))
+  window.localStorage.setItem("preset", JSON.stringify(preset.value))
 }
-let IPSComp = computed({
-  get: () => IPS.value,
-  set: (value: string[]) => {
-    IPS.value = value
-    console.log("IPS set", value)
-    window.localStorage.setItem("IPS", JSON.stringify(IPS))
-  }
-})
 
-export { tokenComp, presetComp, IPSComp }
+export { token, preset, IPS, savelocalstorage }
