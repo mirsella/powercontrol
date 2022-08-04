@@ -10,6 +10,3 @@ project(':capacitor-clipboard').projectDir = new File('../node_modules/@capacito
 
 include ':capacitor-splash-screen'
 project(':capacitor-splash-screen').projectDir = new File('../node_modules/@capacitor/splash-screen/android')
-
-include ':robingenz-capacitor-android-dark-mode-support'
-project(':robingenz-capacitor-android-dark-mode-support').projectDir = new File('../node_modules/@robingenz/capacitor-android-dark-mode-support/android')

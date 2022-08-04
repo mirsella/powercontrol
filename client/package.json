@@ -12,17 +12,16 @@
   },
   "dependencies": {
     "@babel/types": "^7.18.10",
-    "@capacitor-community/wifi": "github:mirsella/capacitor3-wifimanager",
-    "@capacitor/android": "^3.7.0",
-    "@capacitor/clipboard": "^1.0.8",
-    "@capacitor/core": "^3.7.0",
-    "@capacitor/splash-screen": "^1.2.2",
-    "@robingenz/capacitor-android-dark-mode-support": "^1.0.0",
+    "@capacitor-community/wifi": "github:mirsella/capacitor4-wifimanager",
+    "@capacitor/android": "^4.0.0",
+    "@capacitor/clipboard": "^4.0.0",
+    "@capacitor/core": "^4.0.0",
+    "@capacitor/splash-screen": "^4.0.0",
     "redaxios": "^0.5.0",
     "vue": "^3.2.37"
   },
   "devDependencies": {
-    "@capacitor/cli": "^3.6.0",
+    "@capacitor/cli": "^4.0.0",
     "@vitejs/plugin-vue": "^2.3.3",
     "cordova-res": "^0.15.4",
     "jetifier": "^2.0.0",
