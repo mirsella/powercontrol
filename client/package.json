@@ -22,7 +22,7 @@
     "vue": "^3.2.37"
   },
   "devDependencies": {
-    "@capacitor/cli": "^3.6.0",
+    "@capacitor/cli": "^4.0.1",
     "@vitejs/plugin-vue": "^2.3.3",
     "cordova-res": "^0.15.4",
     "jetifier": "^2.0.0",
