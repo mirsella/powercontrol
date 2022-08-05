@@ -26,6 +26,8 @@ function getIntentPluginUrl(nextbootR: Ref, errorR: Ref) {
   error = errorR
   getIntentPlugin.url().then(result => {
     handleIntentUrl(result.value.split("://")[1])
+  }).catch (error => {
+    error.value += error+"\n"
   })
 }
 

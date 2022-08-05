@@ -6,3 +6,5 @@ dist-ssr
 pnpm-lock.yaml
 yarn*
 .idea/
+android/.project
+android/.settings/org.eclipse.buildship.core.prefs
