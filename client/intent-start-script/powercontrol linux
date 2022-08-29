@@ -1,1 +1,2 @@
 adb shell am start -W -a mirsella.powercontrol -d "powercontrol://linux" mirsella.powercontrol
+exit
