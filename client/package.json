@@ -18,7 +18,7 @@
     "@capacitor/core": "^4.1.0",
     "@capacitor/splash-screen": "^4.0.0",
     "redaxios": "^0.5.1",
-    "vue": "^3.2.38"
+    "vue": "^3.2.39"
   },
   "devDependencies": {
     "@capacitor/cli": "^4.1.0",
