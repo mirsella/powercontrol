@@ -4,7 +4,7 @@ path="/home/pi/powercontrol"
 log="/home/pi/powercontrol.log"
 
 cd $path || exit
-waitfornetwork && git pull | rg 'changed'
+/home/pi/bin/waitfornetwork && git pull | rg 'changed'
 new=$?
 if [ "$new" -eq 0 ]; then
   echo "New commit, rebuilding..."
@@ -22,4 +22,4 @@ fi
 
 cd $path/server || exit
 npm run start > $log 2>&1
-[ "$?" -ne 0 ] && notif "powercontrol crashed $?"
+[ "$?" -ne 0 ] && /home/pi/bin/notif "powercontrol crashed $?"
