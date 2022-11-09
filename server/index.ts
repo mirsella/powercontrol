@@ -4,7 +4,6 @@ const bearerToken = require('express-bearer-token');
 const helmet = require('helmet')
 const cors = require('cors')
 const morgan = require('morgan')
-require('dotenv').config()
 
 const app: Application = express();
 app.use(express.json())
@@ -30,5 +29,5 @@ app.use((req, res, next) => {
 require('./routes')(app);
 import './grub'
 
-const port = process.env.port || 8080
+const port = config.port || 8080
 app.listen(port, () => console.log("listening on "+port))

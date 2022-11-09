@@ -2,6 +2,7 @@ import fs from "fs-extra"
 
 type Pins = { reset: Number, power: Number}
 type Config = {
+  port: Number,
   bootTime: Number,
   shutdownTime: Number,
   token: String,
