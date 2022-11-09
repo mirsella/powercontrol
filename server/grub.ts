@@ -13,45 +13,54 @@ const keypresses: Record<string, any> = {
 let firstWait = false
 let dataAfterFirstWait = false
 let secondWait = false
-
-let lastDataDate = new Date()
+let watching = true
+let lastDataDate = new Date(0)
 port.on('close', () => console.log('port closed.'));
 port.on('error', (error: any) => console.log('Serial port error: ' + error));
 port.on('open', () => console.log('port open. Data rate: ' + port.baudRate));
 port.on('data', () => {
   lastDataDate = new Date()
+  watching = true
   if (firstWait) {
     dataAfterFirstWait = true
   }
 })
 
-
+// my boot pattern to wait for grub
 // wait for more than 5sec without data
 // wait for new data
 // wait for more than 2sec from last data
 // send keypress
 setInterval(() => {
-  if ((!firstWait && !dataAfterFirstWait && !secondWait) &&
-      (new Date().getTime() - lastDataDate.getTime() > 5000)) {
-    console.log("first wait")
-    firstWait = true
-  }
+  if (watching) {
+    if (new Date().getTime() - lastDataDate.getTime() > 10000) {
+      console.log("no data for 10sec, resetting state")
+      firstWait = false
+      dataAfterFirstWait = false
+      secondWait = false
+      watching = false
+      return
+    }
 
-  if ((firstWait && dataAfterFirstWait && !secondWait) &&
-      (new Date().getTime() - lastDataDate.getTime() > 2000)) {
-    console.log("second wait")
-    secondWait = true
-  }
+    if ((!firstWait && !dataAfterFirstWait && !secondWait) && (new Date().getTime() - lastDataDate.getTime() > 6000)) {
+      console.log("first wait")
+      firstWait = true
+    }
 
-  if (firstWait && dataAfterFirstWait && secondWait) {
-    console.log("Sending keypress")
-    // port.write(keypresses[config.keypress])
-    config.nextboot.forEach((key: string) => {
-      port.write(keypresses[key])
-    })
-    firstWait = false
-    dataAfterFirstWait = false
-    secondWait = false
-  }
+    if ((firstWait && dataAfterFirstWait && !secondWait) && (new Date().getTime() - lastDataDate.getTime() > 2000)) {
+      console.log("second wait")
+      secondWait = true
+    }
 
+    if (firstWait && dataAfterFirstWait && secondWait) {
+      console.log("Sending keypress")
+      // port.write(keypresses[config.keypress])
+      config.nextboot.forEach((key: string) => {
+        port.write(keypresses[key])
+      })
+      firstWait = false
+      dataAfterFirstWait = false
+      secondWait = false
+    }
+  }
 }, 100)
