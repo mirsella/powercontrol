@@ -1,4 +1,4 @@
-const config = require('./config')
+import config from './config'
 
 import { SerialPort } from 'serialport'
 const port = new SerialPort({ path: "/dev/ttyS0", baudRate: 9600 })
@@ -10,24 +10,48 @@ const keypresses: Record<string, any> = {
   "ENTER": "\n"
 }
 
+let firstWait = false
+let dataAfterFirstWait = false
+let secondWait = false
+
 let lastDataDate = new Date()
-let watching = true
 port.on('close', () => console.log('port closed.'));
 port.on('error', (error: any) => console.log('Serial port error: ' + error));
 port.on('open', () => console.log('port open. Data rate: ' + port.baudRate));
-port.on('data', (data: any) => {
+port.on('data', () => {
   lastDataDate = new Date()
-  watching = true
+  if (firstWait) {
+    dataAfterFirstWait = true
+  }
 })
 
+
+// wait for more than 5sec without data
+// wait for new data
+// wait for more than 2sec from last data
+// send keypress
 setInterval(() => {
-  if (watching) {
-    if (new Date().getTime() - lastDataDate.getTime() > config.bootTime) {
-      console.log('timeout reached')
-      watching = false;
-      config.nextboot.forEach((key: string) => {
-        port.write(keypresses[key])
-      })
-    }
+  if ((!firstWait && !dataAfterFirstWait && !secondWait) &&
+      (new Date().getTime() - lastDataDate.getTime() > 5000)) {
+    console.log("first wait")
+    firstWait = true
   }
+
+  if ((firstWait && dataAfterFirstWait && !secondWait) &&
+      (new Date().getTime() - lastDataDate.getTime() > 2000)) {
+    console.log("second wait")
+    secondWait = true
+  }
+
+  if (firstWait && dataAfterFirstWait && secondWait) {
+    console.log("Sending keypress")
+    // port.write(keypresses[config.keypress])
+    config.nextboot.forEach((key: string) => {
+      port.write(keypresses[key])
+    })
+    firstWait = false
+    dataAfterFirstWait = false
+    secondWait = false
+  }
+
 }, 100)
