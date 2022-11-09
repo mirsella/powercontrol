@@ -1,18 +1,17 @@
-const express = require('express')
-import { Application, Request, Response } from 'express'
-const bearerToken = require('express-bearer-token');
-const helmet = require('helmet')
-const cors = require('cors')
-const morgan = require('morgan')
+import express from 'express'
+import bearerToken from 'express-bearer-token';
+import helmet from 'helmet';
+import cors from 'cors';
+import morgan from 'morgan';
 
-const app: Application = express();
+const app: express.Application = express();
 app.use(express.json())
 app.use(cors({origin: '*'}))
 app.use(helmet())
 app.use(bearerToken())
 app.use(morgan('common'));
 
-const config = require('./config');
+import config from './config';
 
 app.use((req, res, next) => {
   // @ts-ignore: express-bearer-token doesn't add token to Request type

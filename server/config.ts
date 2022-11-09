@@ -1,17 +1,19 @@
 import fs from "fs-extra"
 
 type Pins = { reset: Number, power: Number}
+const possibleKey = ["DOWN", "UP", "ENTER", "ESC"]
 type Config = {
   port: Number,
   bootTime: Number,
   shutdownTime: Number,
   token: String,
-  nextboot: Object,
-  pins: Pins
+  nextboot: string[],
+  pins: Pins,
+  setnextboot: Function,
+  setpins: Function
 }
-const possibleKey = ["DOWN", "UP", "ENTER", "ESC"]
 
-const configfile = fs.readJsonSync('./config.json')
+const configfile: Config = fs.readJsonSync('./config.json')
 async function writeconfig() { fs.writeJsonSync('./config.json', configfile); }
 
 if (process.argv.includes('token')) {
@@ -79,8 +81,8 @@ configfile.setpins = function (pins: Pins) {
 }
 
 const config = new Proxy(configfile, {
-  get(obj, prop) { return obj[prop] },
-  set(obj, prop, value) {
+  get(obj: any, prop) { return obj[prop] },
+  set(obj: any, prop, value) {
     obj[prop] = value
     return true
   }

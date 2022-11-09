@@ -1,14 +1,14 @@
-const config = require('./config')
-const relay = require('./relay')
-import { Application } from 'express'
+import config from './config';
+import * as relay from './relay';
+import express from 'express'
 
-module.exports = (app: Application) => {
+module.exports = (app: express.Application) => {
 
-  app.all('/', (req, res) => {
+  app.all('/', (_req, res) => {
     res.send("powercontrol")
   })
 
-  app.all('/getnextboot', (req, res) => {
+  app.all('/getnextboot', (_req, res) => {
     res.json(config.nextboot)
   })
 
@@ -21,7 +21,7 @@ module.exports = (app: Application) => {
     }
   })
 
-  app.all('/getpins', (req, res) => {
+  app.all('/getpins', (_req, res) => {
     res.json(config.pins)
   })
 
@@ -34,17 +34,17 @@ module.exports = (app: Application) => {
     }
   })
 
-  app.all('/power', (req, res) => {
+  app.all('/power', (_req, res) => {
     relay.power()
     res.send("power")
   })
 
-  app.all('/reset', (req, res) => {
+  app.all('/reset', (_req, res) => {
     relay.reset()
     res.send("reset")
   }),
 
-  app.all('/reboot', (req, res) => {
+  app.all('/reboot', (_req, res) => {
     relay.reboot()
     res.send("reboot")
   })
