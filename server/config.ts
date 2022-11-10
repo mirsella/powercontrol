@@ -4,7 +4,6 @@ type Pins = { reset: Number, power: Number}
 const possibleKey = ["DOWN", "UP", "ENTER", "ESC"]
 type Config = {
   port: Number,
-  bootTime: Number,
   shutdownTime: Number,
   token: String,
   nextboot: string[],
@@ -37,7 +36,6 @@ if (
   typeof configfile.token === "string" && configfile.token.length > 0 &&
   checkkeypresses(configfile.nextboot) &&
   checkpins(configfile.pins) &&
-  typeof configfile.bootTime === "number" && configfile.bootTime >= 1 &&
   typeof configfile.shutdownTime === "number" && configfile.shutdownTime >= 1
   ) {
     console.log('config ok')
