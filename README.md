@@ -16,6 +16,6 @@ feel free to ask anything it was a fun project not very well documented
   <img src="./pictures/client-android-settings.png" width=20%>
 </p>
 <p float="left">
-<img src="./pictures/rpi.jpg" width=20%>
-<img src="./pictures/relay.jpg" width=20%>
+<img src="./pictures/rpi.jpg" width=40%>
+<img src="./pictures/relay.jpg" width=40%>
 </p>
