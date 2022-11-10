@@ -12,7 +12,7 @@ const keypresses: Record<string, any> = {
 
 let firstWait = false
 let dataAfterFirstWait = false
-let secondWait = false
+let secondWait = true
 let watching = true
 let lastDataDate = new Date(0)
 port.on('close', () => console.log('port closed.'));
