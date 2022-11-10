@@ -5,6 +5,7 @@ import axios from 'redaxios'
 
 async function searchIP(nextboot: Ref, error: Ref) {
   document.querySelector('#refresh')?.classList.add('animate-spin')
+  connected.value = ""
   const httpRequests: Promise<void>[] = [];
 
   const ips = await getAllIPs()

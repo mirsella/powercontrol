@@ -5,7 +5,7 @@ export default defineConfig({
   shortcuts: {
     transition: "transition-all duration-800 ease-in-out",
     button: "dark:(fill-white bg-dark-200 hover:bg-true-gray-600) fill-black rounded-full bg-light-700 hover:bg-true-gray-300",
-    mobile: "<sm:(h-6rem mx-auto)"
+    mobile: "<sm:(h-6rem mx-auto) h-10rem mx-2rem",
   },
   theme: {
     extend: {
