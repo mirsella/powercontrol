@@ -14,7 +14,7 @@
     "@babel/types": "^7.20.2",
     "@capacitor-community/wifi": "github:mirsella/capacitor4-wifimanager",
     "@capacitor/android": "^4.5.0",
-    "@capacitor/clipboard": "^4.0.0",
+    "@capacitor/clipboard": "^4.1.0",
     "@capacitor/core": "^4.5.0",
     "@capacitor/splash-screen": "^4.1.1",
     "redaxios": "^0.5.1",
