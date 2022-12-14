@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "@types/cors": "^2.8.13",
-    "@types/express": "^4.17.14",
+    "@types/express": "^4.17.15",
     "@types/fs-extra": "^9.0.13",
     "@types/morgan": "^1.9.3",
     "@types/node": "^18.11.14",
