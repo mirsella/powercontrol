@@ -48,7 +48,7 @@ setInterval(() => {
 			firstWait = true
 		}
 
-		if ((firstWait && dataAfterFirstWait && !secondWait) && (new Date().getTime() - lastDataDate.getTime() > 2000)) {
+		if ((firstWait && dataAfterFirstWait && !secondWait) && (new Date().getTime() - lastDataDate.getTime() > 2500)) {
 			console.log("second wait")
 			secondWait = true
 		}

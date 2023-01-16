@@ -21,5 +21,5 @@ if [ "$new" -eq 0 ]; then
 fi
 
 cd $path/server || exit
-npm run start > $log 2>&1
+npm run start | awk "{print \"$(date) \" \$0}" 2>&1 | tee -a $log 
 [ "$?" -ne 0 ] && /home/pi/bin/notif "powercontrol crashed $?"
