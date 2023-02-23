@@ -31,13 +31,9 @@ jobs:
         working-directory: ./client
         run: npm run build
 
-      - name: Capacitor update
+      - name: Capacitor sync
         working-directory: ./client
-        run: npx cap update
-
-      - name: Capacitor copy
-        working-directory: ./client
-        run: npx cap copy
+        run: npx cap sync
 
       - name: Build Android AssembleDebug
         working-directory: ./client
