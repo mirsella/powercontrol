@@ -1,10 +1,11 @@
 {
-  "port": 8080,
-  "shutdownTime": 20000,
-  "nextboot": ["DOWN", "ENTER"],
-  "pins": {
-    "reset": 18,
-    "power": 16
-  },
-  "token": "183e4373e16ba944303e2c2be285b51a5ec0690ec30cf518b3a8ef3adddc51f580499388463c489948524c8f95ac5a827358c502687ede1dc912543e3e22e6c9"
-
+	"port": 8080,
+	"shutdownTime": 20000,
+	"nextboot": ["DOWN", "ENTER"],
+	"pins": {
+		"reset": 18,
+		"power": 16
+	},
+	"host_ip": "192.168.1.131",
+	"token": "183e4373e16ba944303e2c2be285b51a5ec0690ec30cf518b3a8ef3adddc51f580499388463c489948524c8f95ac5a827358c502687ede1dc912543e3e22e6c9"
+}
