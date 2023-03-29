@@ -51,6 +51,7 @@ module.exports = (app: express.Application) => {
 	}),
 
 	app.all('/host_online', (_req, res) => {
+		let cfg = { timeout: 2, min_reply: 1 }
 		ping.sys.probe(config.host_ip, (isAlive: boolean, error: object) => {
 			if (error)
 				{

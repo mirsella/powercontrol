@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue' 
 import { SplashScreen } from '@capacitor/splash-screen';
 import { Capacitor } from '@capacitor/core';
-import axios from 'redaxios' 
+import axios from 'redaxios'
 
 import NextbootSettings from './components/nextbootSettings.vue'
 import SettingsToggle from './components/settingsToggle.vue'
