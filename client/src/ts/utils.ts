@@ -12,7 +12,6 @@ async function searchIP(nextboot: Ref, error: Ref) {
 	document.querySelector('#refresh')?.classList.add('animate-spin')
 	ips.forEach((ip: string) => {
 		const lip = ip
-		// if (lip.match(/\.XXX\./)) { return }
 
 		httpRequests.push(
 			axios.get(`${lip}/`, {headers: { Authorization: `Bearer ${token.value}` }})
