@@ -1,19 +1,15 @@
-a raspberry pi on my computer case, with a serial connection to the motherboard to control the GRUB entry, and a relay to simulate the power and reset button of my case.
-so i can turn on, off, reset and choose to boot on windows or linux from a web app, and available on mobile with capacitor.
+motherboard power and reset pins <-> relay <-> raspberry <-> capacitor app
 
-todo : better readme + pictures of the setup irl
+also a serial connection with the motherboard to control GRUB entry (boot into linux or windows from the app)
 
-feel free to ask anything it was a fun project not very well documented
-
+feel free to open a issue for questions
 
 # pictures
 <p float="left">
-  <img src="./pictures/client-web-main.png" width=40%>
-  <img src="./pictures/client-web-settings.png" width=40%>
-</p>
-<p float="left">
-  <img src="./pictures/client-android-main.png" width=20%>
-  <img src="./pictures/client-android-settings.png" width=20%>
+  <img src="./pictures/w1.png" width=20%>
+  <img src="./pictures/w2.png" width=20%>
+	<img src="./pictures/b1.png" width=20%>
+	<img src="./pictures/b2.png" width=20%>
 </p>
 <p float="left">
 <img src="./pictures/rpi.jpg" width=40%>
