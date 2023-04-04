@@ -13,7 +13,7 @@
   "dependencies": {
     "@babel/types": "^7.21.4",
     "@capacitor-community/wifi": "github:mirsella/capacitor4-wifimanager",
-    "@capacitor/android": "^4.7.1",
+    "@capacitor/android": "^4.7.3",
     "@capacitor/clipboard": "^4.1.0",
     "@capacitor/core": "^4.7.1",
     "@capacitor/splash-screen": "^4.2.0",
