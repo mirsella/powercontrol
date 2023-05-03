@@ -22,7 +22,7 @@
     "@types/morgan": "^1.9.4",
     "@types/node": "^18.16.0",
     "nodemon": "^2.0.22",
-    "tsc-watch": "^6.0.0",
+    "tsc-watch": "^6.0.4",
     "typescript": "^5.0.4"
   }
 }
