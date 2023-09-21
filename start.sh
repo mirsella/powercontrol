@@ -4,6 +4,8 @@ path="/home/pi/powercontrol"
 log="/home/pi/powercontrol.log"
 
 cd $path || exit
+git add -A
+git stash
 /home/pi/bin/waitfornetwork && git pull | rg 'changed'
 new=$?
 if [ "$new" -eq 0 ]; then
