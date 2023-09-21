@@ -28,5 +28,7 @@ port.on("data", (data: BufferSource) => {
     config.nextboot.forEach((key: string) => {
       port.write(keypresses[key]);
     });
+  } else {
+    lastKey = data.toString();
   }
 });
