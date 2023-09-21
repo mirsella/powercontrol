@@ -7,19 +7,19 @@ cd $path || exit
 /home/pi/bin/waitfornetwork && git pull | rg 'changed'
 new=$?
 if [ "$new" -eq 0 ]; then
-  echo "New commit, rebuilding..."
+	echo "New commit, rebuilding..."
 
-  cd $path/server || exit
-  npm i
-  npm run build
+	cd $path/server || exit
+	npm i
+	npm run build
 
-  cd $path/client || exit
-  npm i
-  npm run build
-  sudo cp -r dist/* /var/www/html/powerclient
-  sudo chmod -R 755 /var/www/html/powerclient
+	cd $path/client || exit
+	npm i
+	npm run build
+	sudo cp -r dist/* /var/www/html/powerclient
+	sudo chmod -R 755 /var/www/html/powerclient
 fi
 
 cd $path/server || exit
-npm run start | awk "{print \"$(date) \" \$0}" 2>&1 | tee -a $log 
+npm run start | awk "{print \"$(date) \" \$0}" 2>&1 | tee -a $log
 [ "$?" -ne 0 ] && /home/pi/bin/notif "powercontrol crashed $?"
