@@ -13,7 +13,7 @@
     "morgan": "^1.10.0",
     "onoff": "^6.0.3",
     "ping": "^0.4.4",
-    "serialport": "^11.0.0"
+    "serialport": "^11.0.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.13",
