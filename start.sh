@@ -1,7 +1,7 @@
 #!/bin/sh
 
-path="$USER/powercontrol"
-log="$USER/powercontrol.log"
+path="$HOME/powercontrol"
+log="$HOME/powercontrol.log"
 
 cd $path || exit
 git add -A
