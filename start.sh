@@ -7,7 +7,7 @@ cd $path || exit
 git add -A
 git stash
 until ping 1.1.1.1 -c 1; do sleep 1; done
-git pull | rg 'changed'
+git pull | grep 'changed'
 if [ $? -eq 0 ]; then
 	echo "New commit, rebuilding..."
 
