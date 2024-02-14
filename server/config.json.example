@@ -3,8 +3,8 @@
 	"shutdownTime": 20000,
 	"nextboot": ["DOWN", "ENTER"],
 	"pins": {
-		"reset": 24,
-		"power": 23
+		"reset": 23,
+		"power": 24
 	},
 	"host_ip": "192.168.1.131",
 	"token": "xxx"
