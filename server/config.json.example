@@ -1,10 +1,10 @@
 {
 	"port": 8080,
-	"shutdownTime": 20000,
+	"shutdownTime": 15000,
 	"nextboot": ["DOWN", "ENTER"],
 	"pins": {
-		"reset": 23,
-		"power": 24
+		"reset": 535,
+		"power": 536
 	},
 	"host_ip": "192.168.1.131",
 	"token": "xxx"
