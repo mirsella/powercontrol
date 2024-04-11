@@ -1,5 +1,5 @@
 {
-	"port": 8080,
+	"port": 9999,
 	"shutdownTime": 15000,
 	"nextboot": ["DOWN", "ENTER"],
 	"pins": {
