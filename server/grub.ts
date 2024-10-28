@@ -19,6 +19,7 @@ export function startWait() {
       let array = new Array(8).fill(0);
       array[2] = keycodes[key];
       fs.writeFileSync(devicepath, Buffer.from(array));
+      fs.writeFileSync("/dev/hidg0", Buffer.alloc(8));
     }
   }, timeToMenu);
 }
