@@ -8,7 +8,7 @@ set -e
 # Treat undefined environment variables as errors.
 set -u
 
-[ -f /dev/hidg0 ] && exit
+[ -c /dev/hidg0 ] && exit
 
 modprobe libcomposite
 

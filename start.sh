@@ -4,9 +4,7 @@ path="$HOME/powercontrol"
 
 cd "$path" || exit
 
-if [ ! -f /dev/hidg0 ]; then
-	sudo sh setup-hid-device.sh || exit
-fi
+sudo sh setup-hid-device.sh || exit
 
 git add -A
 git stash
