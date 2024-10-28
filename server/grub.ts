@@ -18,7 +18,7 @@ export function startWait() {
     for (const key in config.nextboot) {
       let array = new Array(8).fill(0);
       array[2] = keycodes[key];
-      fs.writeFile(devicepath, Buffer.from(array));
+      fs.writeFileSync(devicepath, Buffer.from(array));
     }
   }, timeToMenu);
 }
