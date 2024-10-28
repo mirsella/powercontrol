@@ -1,7 +1,7 @@
 {
   "port": 9999,
-  "shutdownTime": 15000,
-  "menuTime": 26000,
+  "shutdownTime": 20000,
+  "menuTime": 12000,
   "nextboot": ["DOWN", "ENTER"],
   "pins": {
     "reset": 535,
