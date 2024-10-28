@@ -24,8 +24,8 @@ echo 0x0200 >bcdUSB    # USB2
 STRINGS_DIR="strings/0x409"
 mkdir -p "$STRINGS_DIR"
 echo "6b65796d696d6570690" >"${STRINGS_DIR}/serialnumber"
-echo "mirsella" >"${STRINGS_DIR}/manufacturer"
-echo "powercontrol keyboard" >"${STRINGS_DIR}/product"
+echo "powercontrol" >"${STRINGS_DIR}/manufacturer"
+echo "Generic USB Keyboard" >"${STRINGS_DIR}/product"
 
 FUNCTIONS_DIR="functions/hid.usb0"
 mkdir -p "$FUNCTIONS_DIR"
