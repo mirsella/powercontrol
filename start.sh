@@ -13,11 +13,13 @@ git stash
 until ping 1.1.1.1 -c 1; do sleep 1; done
 
 if git pull | grep -q 'changed'; then
-	echo "New commit, rebuilding and relaunching $0.sh"
+	echo "New commit, rebuilding and relaunching $0"
 
-	cd "$path"/server || exit
-	npm i
-	npm run build
+	(
+		"$path"/server || exit
+		npm i
+		npm run build
+	)
 
 	sh "$0"
 else
