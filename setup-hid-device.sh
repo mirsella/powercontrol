@@ -48,4 +48,4 @@ echo "Config ${CONFIG_INDEX}: ECM network" >"${CONFIGS_STRINGS_DIR}/configuratio
 ln -s "$FUNCTIONS_DIR" "${CONFIGS_DIR}/"
 ls /sys/class/udc >UDC
 
-chmod 666 /dev/hidg0
+chmod 777 /dev/hidg0
