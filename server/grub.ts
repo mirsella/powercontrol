@@ -1,5 +1,6 @@
 import config from "./config";
 import fs from "fs-extra";
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const keycodes: Record<string, number> = {
   ESC: 0x29,
@@ -20,7 +21,9 @@ export function startWait() {
       let array = new Array(8).fill(0);
       array[2] = keycodes[key];
       fs.writeFileSync(devicepath, Buffer.from(array));
+      await sleep(50);
       fs.writeFileSync("/dev/hidg0", Buffer.alloc(8));
+      await sleep(50);
     }
   }, config.menuTime);
 }
