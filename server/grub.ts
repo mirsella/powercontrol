@@ -13,7 +13,9 @@ const devicepath = "/dev/hidg0";
 let timeout: null | NodeJS.Timeout;
 export function startWait() {
   if (timeout) clearTimeout(timeout);
+  console.log("starting timeout for menu", config.menuTime);
   timeout = setTimeout(async () => {
+    console.log("sending keycodes");
     for (const key in config.nextboot) {
       let array = new Array(8).fill(0);
       array[2] = keycodes[key];
