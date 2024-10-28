@@ -1,31 +1,30 @@
-const gpio = require('onoff').Gpio;
-import config from './config'
+const gpio = require("onoff").Gpio;
+import config from "./config";
+import { startWait } from "./grub";
 
-let powerPin = new gpio(config.pins.power, 'high');
-let resetPin = new gpio(config.pins.reset, 'high');
+let powerPin = new gpio(config.pins.power, "high");
+let resetPin = new gpio(config.pins.reset, "high");
 
 const deboucetime = 500;
-async function reset () {
+async function reset() {
   resetPin.writeSync(0);
   setTimeout(() => {
     resetPin.writeSync(1);
   }, deboucetime);
+  startWait();
 }
-async function power () {
+async function power() {
   powerPin.writeSync(0);
   setTimeout(() => {
     powerPin.writeSync(1);
   }, deboucetime);
+  startWait();
 }
 async function reboot() {
-  await power()
+  await power();
   setTimeout(() => {
-    power()
-  }, config.shutdownTime)
+    power();
+  }, config.shutdownTime);
 }
 
-export {
-  power,
-  reset,
-  reboot
-}
+export { power, reset, reboot };
