@@ -16,7 +16,7 @@ export function startWait() {
   console.log("starting timeout for menu", config.menuTime);
   timeout = setTimeout(async () => {
     console.log("sending keycodes");
-    for (const key in config.nextboot) {
+    for (const key of config.nextboot) {
       let array = new Array(8).fill(0);
       array[2] = keycodes[key];
       fs.writeFileSync(devicepath, Buffer.from(array));
