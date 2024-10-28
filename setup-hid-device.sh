@@ -8,6 +8,8 @@ set -e
 # Treat undefined environment variables as errors.
 set -u
 
+[ -f /dev/hidg0 ] && exit
+
 modprobe libcomposite
 
 cd /sys/kernel/config/usb_gadget/
