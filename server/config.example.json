@@ -1,0 +1,12 @@
+{
+  "port": 9999,
+  "shutdownTime": 15000,
+  "menuTime": 26000,
+  "nextboot": ["DOWN", "ENTER"],
+  "pins": {
+    "reset": 535,
+    "power": 536
+  },
+  "host_ip": "192.168.1.131",
+  "token": "xxx"
+}

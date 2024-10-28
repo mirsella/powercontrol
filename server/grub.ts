@@ -8,7 +8,6 @@ const keycodes: Record<string, number> = {
   ENTER: 0x28,
 };
 
-const timeToMenu = 4000;
 const devicepath = "/dev/hidg0";
 
 let timeout: null | NodeJS.Timeout;
@@ -21,7 +20,7 @@ export function startWait() {
       fs.writeFileSync(devicepath, Buffer.from(array));
       fs.writeFileSync("/dev/hidg0", Buffer.alloc(8));
     }
-  }, timeToMenu);
+  }, config.menuTime);
 }
 
 // const keypresses: Record<string, any> = {
