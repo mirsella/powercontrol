@@ -1,7 +1,7 @@
 import config from "./config";
 import fs from "fs-extra";
 
-const keypresses: Record<string, number> = {
+const keycodes: Record<string, number> = {
   ESC: 0x29,
   UP: 0x52,
   DOWN: 0x51,
@@ -15,8 +15,11 @@ let timeout: null | NodeJS.Timeout;
 export function startWait() {
   if (timeout) clearTimeout(timeout);
   timeout = setTimeout(async () => {
-    let codes: number[] = config.nextboot.map((key: string) => keypresses[key]);
-    fs.writeFile(devicepath, new Int8Array(codes));
+    for (const key in config.nextboot) {
+      let array = new Array(8).fill(0);
+      array[2] = keycodes[key];
+      fs.writeFile(devicepath, Buffer.from(array));
+    }
   }, timeToMenu);
 }
 
