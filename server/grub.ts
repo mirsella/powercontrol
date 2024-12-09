@@ -17,13 +17,17 @@ export function startWait() {
   console.log("starting timeout for menu", config.menuTime);
   timeout = setTimeout(async () => {
     console.log("sending keycodes");
-    for (const key of config.nextboot) {
-      let array = new Array(8).fill(0);
-      array[2] = keycodes[key];
-      fs.writeFileSync(devicepath, Buffer.from(array));
-      await sleep(50);
-      fs.writeFileSync("/dev/hidg0", Buffer.alloc(8));
-      await sleep(50);
+    try {
+      for (const key of config.nextboot) {
+        let array = new Array(8).fill(0);
+        array[2] = keycodes[key];
+        fs.writeFileSync(devicepath, Buffer.from(array));
+        await sleep(50);
+        fs.writeFileSync("/dev/hidg0", Buffer.alloc(8));
+        await sleep(50);
+      }
+    } catch (e) {
+      console.error(e);
     }
   }, config.menuTime);
 }
