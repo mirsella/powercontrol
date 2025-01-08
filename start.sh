@@ -1,8 +1,6 @@
 #!/bin/sh
 
-path="$HOME/powercontrol"
-
-cd "$path" || exit
+cd "$(dirname "$0")" || exit
 
 sudo bash setup-hid-device.bash || exit
 
@@ -21,6 +19,6 @@ sudo bash setup-hid-device.bash || exit
 #
 # 	sh "$0"
 # else
-cd "$path"/server || exit
+cd server || exit
 npm run start
 # fi
