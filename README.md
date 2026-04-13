@@ -1,10 +1,24 @@
-motherboard power and reset pins <-> relay <-> raspberry <-> capacitor app
+# powercontrol
 
-also a serial connection with the motherboard to control GRUB entry (boot into linux or windows from the app)
+PC power/reset controller built around a Raspberry Pi, a relay board, and a Vue/Capacitor client.
 
-feel free to open a issue for questions
+It can also send serial key presses to the motherboard so the app can select the next GRUB entry before boot.
 
-# pictures
+## Quick start
+
+1. Copy `server/config.example.json` to `server/config.json`.
+2. Adjust the GPIO pins, `host_ip`, and `token`.
+3. Start the server with `cd server && npm install && npm run dev`.
+4. Start the client with `cd client && npm install && npm run dev`.
+
+## Android build
+
+```bash
+cd client
+npm run android
+```
+
+## Pictures
 
 <p float="left">
   <img src="./pictures/w1.png" width=20%>
